@@ -1,0 +1,210 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{MRR{\etalchar{+}}08b}
+
+\bibitem[AP09]{alekseyev_pevzner_2009}
+M.~A. Alekseyev and P.~A. Pevzner.
+\newblock {B}reakpoint graphs and ancestral genome reconstructions.
+\newblock {\em Genome Research}, 19:943--957, May 2009.
+
+\bibitem[AT11]{arndt}
+W.~Arndt and Jijun Tang.
+\newblock Emulating insertion and deletion events in genome rearrangement
+  analysis.
+\newblock In {\em Bioinformatics and Biomedicine (BIBM), 2011 IEEE
+  International Conference on}, pages 105--108, Nov 2011.
+
+\bibitem[BFRnt]{bulteau}
+Laurent Bulteau, Guillaume Fertin, and Irena Rusu.
+\newblock Pancake flipping is hard.
+\newblock {\em CoRR}, abs/1111.0434, preprint.
+
+\bibitem[BMRS11]{stoye_triangle}
+Marilia Braga, Raphael Machado, Leonardo Ribeiro, and Jens Stoye.
+\newblock On the weight of indels in genomic distances.
+\newblock {\em BMC Bioinformatics}, 12(Suppl 9):S13, 2011.
+
+\bibitem[BMS06]{bergeron}
+Anne Bergeron, Julia Mixtacki, and Jens Stoye.
+\newblock A unifying view of genome rearrangements.
+\newblock {\em WABI 2006. LNCS (LNBI)}, pages 163--173, 2006.
+
+\bibitem[BP96a]{bafna_pevzner_1996}
+Vineet Bafna and Pavel~A. Pevzner.
+\newblock Genome rearrangements and sorting by reversals.
+\newblock {\em SIAM Journal on Computing}, 25:272--289, February 1996.
+
+\bibitem[BP96b]{bafna}
+Vineet Bafna and Pavel~A. Pevzner.
+\newblock Genome rearrangements and sorting by reversals.
+\newblock {\em SIAM J. Comput.}, 25(2):272--289, 1996.
+
+\bibitem[BS10]{braga2}
+Mar\'{\i}lia~D.V. Braga and Jens Stoye.
+\newblock The solution space of sorting by {D}{C}{J}.
+\newblock {\em Journal of Computational Biology}, 17(9):1145--1165, September
+  2010.
+
+\bibitem[BWS10]{braga2010}
+Mar\'{\i}lia D.~V. Braga, Eyla Willing, and Jens Stoye.
+\newblock Genomic distance with {D}{C}{J} and indels.
+\newblock {\em Proceedings of the 10th international conference on Algorithms
+  in bioinformatics}, pages 90--101, 2010.
+
+\bibitem[CB95]{cohen_blum_1995}
+David~S. Cohen and Manuel Blum.
+\newblock On the problem of sorting burnt pancakes.
+\newblock {\em Discrete Applied Mathematics}, 61:105--120, July 1995.
+
+\bibitem[CFM{\etalchar{+}}09]{chitturi}
+B.~Chitturi, W.~Fahle, Z.~Meng, L.~Morales, C.O. Shields, I.H. Sudborough, and
+  W.~Voit.
+\newblock An upper bound for sorting by prefix reversals.
+\newblock {\em Theoretical Computer Science}, 410(36):3372 -- 3390, 2009.
+\newblock Graphs, Games and Computation: Dedicated to Professor Burkhard Monien
+  on the Occasion of his 65th Birthday.
+
+\bibitem[Com12]{compeau2012}
+Phillip E.~C. Compeau.
+\newblock A simplified view of dcj-indel distance.
+\newblock In Benjamin~J. Raphael and Jijun Tang, editors, {\em WABI}, volume
+  7534 of {\em Lecture Notes in Computer Science}, pages 365--377. Springer,
+  2012.
+
+\bibitem[Com13]{compeau2013}
+Phillip Compeau.
+\newblock Dcj-indel sorting revisited.
+\newblock {\em Algorithms for Molecular Biology}, 8(1):6, 2013.
+
+\bibitem[DS38]{dobzhansky}
+Theodosius Dobzhansky and Alfred~H. Sturtevant.
+\newblock Inversions in the chromosomes of drosophila pseudoobscura.
+\newblock {\em Genetics}, 23(1):28--64, January 1938.
+
+\bibitem[dSMDB13]{braga2013}
+Poly da~Silva, Raphael Machado, Simone Dantas, and Marilia Braga.
+\newblock Dcj-indel and dcj-substitution distances with distinct operation
+  costs.
+\newblock {\em Algorithms for Molecular Biology}, 8(1):21, 2013.
+
+\bibitem[FLR{\etalchar{+}}09]{fertin2009}
+Guillaume Fertin, Anthony Labarre, Irena Rusu, \'{E} Tannier, and St\'{e}phane
+  Vialette.
+\newblock {\em Combinatorics of Genome Rearrangements}.
+\newblock {M}{I}{T} Press, 2009.
+
+\bibitem[GP79a]{gates_papadimitriou_1979}
+William~H. Gates and Christos~H. Papadimitriou.
+\newblock Bounds for sorting by prefix reversal.
+\newblock {\em Discrete Mathematics}, 27:47--57, 1979.
+
+\bibitem[GP79b]{gates}
+William~H. Gates and Christos~H. Papadimitriou.
+\newblock Bounds for sorting by prefix reversal.
+\newblock {\em Discrete Mathematics}, 27(1):47 -- 57, 1979.
+
+\bibitem[{Har}75]{dweighter}
+{Harry Dweighter (pseudonym of Goodman, J.)}.
+\newblock Problem {E2569}.
+\newblock {\em American Mathematical Monthly}, 82:1010, 1975.
+
+\bibitem[HP99]{hannenhalli_pevzner_1999}
+Sridhar Hannenhalli and Pavel~A. Pevzner.
+\newblock Transforming cabbage into turnip: Polynomial algorithm for sorting
+  signed permutations by reversals.
+\newblock {\em Journal of the ACM}, 46:1--27, January 1999.
+
+\bibitem[HS97]{heydari}
+Mohammad~H. Heydari and I.Hal Sudborough.
+\newblock On the diameter of the pancake network.
+\newblock {\em Journal of Algorithms}, 25(1):67 -- 94, 1997.
+
+\bibitem[MRR{\etalchar{+}}08a]{ma_2008}
+J.~Ma, A.~Ratan, B.~J. Raney, B.~B. Suh, W.~Miller, and D.~Haussler.
+\newblock {T}he infinite sites model of genome evolution.
+\newblock {\em Proceedings of the National Academy of Sciences of the United
+  States of America}, 105:14254--14261, Sep 2008.
+
+\bibitem[MRR{\etalchar{+}}08b]{ma}
+Jian Ma, Aakrosh Ratan, Brian~J. Raney, Bernard~B. Suh, Webb Miller, and David
+  Haussler.
+\newblock {The infinite sites model of genome evolution.}
+\newblock {\em Proceedings of the National Academy of Sciences of the United
+  States of America}, 105(38):14254--14261, September 2008.
+
+\bibitem[NT84]{nadeau_taylor_1984}
+J.~H. Nadeau and B.~A. Taylor.
+\newblock {L}engths of chromosomal segments conserved since divergence of man
+  and mouse.
+\newblock {\em Proceedings of the National Academy of Sciences of the United
+  States of America}, 81:814--818, Feb 1984.
+
+\bibitem[Ohn73]{ohno_1973}
+S.~Ohno.
+\newblock {A}ncient linkage groups and frozen accidents.
+\newblock {\em Nature}, 244:259--262, Aug 1973.
+
+\bibitem[PT03a]{pevzner_tesler_2003b}
+P.~Pevzner and G.~Tesler.
+\newblock {G}enome rearrangements in mammalian evolution: lessons from human
+  and mouse genomes.
+\newblock {\em Genome Research}, 13:37--45, Jan 2003.
+
+\bibitem[PT03b]{pevzner_tesler_2003a}
+P.~Pevzner and G.~Tesler.
+\newblock {H}uman and mouse genomic sequences reveal extensive breakpoint reuse
+  in mammalian evolution.
+\newblock {\em Proceedings of the National Academy of Sciences of the United
+  States of America}, 100:7672--7677, Jun 2003.
+
+\bibitem[SBMD12]{braga2012}
+PolyH. Silva, MaríliaD.V. Braga, Raphael Machado, and Simone Dantas.
+\newblock Dcj-indel distance with distinct operation costs.
+\newblock In Ben Raphael and Jijun Tang, editors, {\em Algorithms in
+  Bioinformatics}, volume 7534 of {\em Lecture Notes in Computer Science},
+  pages 378--390. Springer Berlin Heidelberg, 2012.
+
+\bibitem[SD36]{sturtevant_dobzhansky_1936}
+A.~H. Sturtevant and T.~Dobzhansky.
+\newblock {I}nversions in the {T}hird {C}hromosome of {W}ild {R}aces of
+  {D}rosophila {P}seudoobscura, and {T}heir {U}se in the {S}tudy of the
+  {H}istory of the {S}pecies.
+\newblock {\em Proceedings of the National Academy of Sciences of the United
+  States of America}, 22:448--450, Jul 1936.
+
+\bibitem[Stu21]{sturtevant_1921}
+A.~H. Sturtevant.
+\newblock {A} {C}ase of {R}earrangement of {G}enes in {D}rosophila.
+\newblock {\em Proceedings of the National Academy of Sciences of the United
+  States of America}, 7:235--237, Aug 1921.
+
+\bibitem[TZS09]{tannier}
+Eric Tannier, Chunfang Zheng, and David Sankoff.
+\newblock Multichromosomal median and halving problems under different genomic
+  distances.
+\newblock {\em {B}{M}{C} Bioinformatics}, 10(1):120, 2009.
+
+\bibitem[YAF05a]{yancopoulos_2005}
+S.~Yancopoulos, O.~Attie, and R.~Friedberg.
+\newblock {E}fficient sorting of genomic permutations by translocation,
+  inversion and block interchange.
+\newblock {\em Bioinformatics}, 21:3340--3346, Aug 2005.
+
+\bibitem[YAF05b]{yancopoulos}
+Sophia Yancopoulos, Oliver Attie, and Richard Friedberg.
+\newblock Efficient sorting of genomic permutations by translocation, inversion
+  and block interchange.
+\newblock {\em Bioinformatics}, 21(16):3340--3346, 2005.
+
+\bibitem[YF09]{yancopoulos2009}
+Sophia Yancopoulos and Richard Friedberg.
+\newblock D{C}{J} path formulation for genome transformations which include
+  insertions, deletions, and duplications.
+\newblock {\em Journal of Computational Biology}, 16(10):1311--1338, October
+  2009.
+
+\bibitem[ZB09]{zhao_bourque_2009}
+H.~Zhao and G.~Bourque.
+\newblock {R}ecovering genome rearrangements in the mammalian phylogeny.
+\newblock {\em Genome Research}, 19:934--942, May 2009.
+
+\end{thebibliography}

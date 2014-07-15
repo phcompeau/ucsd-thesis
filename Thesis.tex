@@ -1,0 +1,433 @@
+
+% KNOWN ISSUES:
+%
+%   Currently only the 12pt size conforms to the UCSD requirements.
+%   The 10pt and 11pt options make the footnote fonts too small.
+%
+% More control of the formatting of your thesis can be achieved through
+% modifications of the included LaTeX class files:
+%
+%   * ucsd.cls    -- Class file
+%   * uct10.clo   -- Configuration files for font sizes 10pt, 11pt, 12pt
+%     uct11.clo                            
+%     uct12.clo
+%
+% ----------------------------------------------------------------------
+
+
+
+% Setup the documentclass 
+% default options: 12pt, oneside, final
+%
+% fonts: 10pt, 11pt, 12pt -- are valid for UCSD dissertations.
+% sides: oneside, twoside -- note that two-sided theses are not accepted 
+%                            by OGS.
+% mode: draft, final      -- draft mode switches to single spacing, 
+%                            removes hyperlinks, and places a black box
+%                            at every overfull hbox (check these before
+%                            submission).
+% chapterheads            -- Include this if you want your chapters to read:
+%                              Chapter 1
+%                              Title of Chapter
+%
+%                            instead of
+%                              1 Title of Chapter
+\documentclass[12pt,chapterheads, dvipsnames]{ucsd}
+
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath} %Needed for certain math formulas
+\usepackage{amsthm}
+\usepackage{amscd}
+\usepackage{textcomp} %Allowing old-style figures in native font
+%\usepackage{geometry}% Will make the margins wider
+\usepackage{float}
+\usepackage{wrapfig} %for wrapping main text around figures.
+\usepackage{sidecap} %for side captions
+\usepackage{epstopdf}
+\usepackage{authblk}
+\usepackage{memhfixc}
+
+\usepackage{eso-pic} % Needed for full page images, like the cover and chapter covers
+\usepackage{tabularx} % Needed for tabularx, which provides a number of additional options for creating tables, like fixed-width columns
+\newcolumntype{Y}{>{\centering\arraybackslash}X} % Defining a new column type for tabularx.  Y is needed for centered columns instead of ragged right.
+\usepackage{placeins} % Needed for float barrier (e.g., between sections to keep figures from jumping across sections)
+\usepackage[scaled=0.87]{luximono} %Makes \texttt the Luximono font.  Requires installation of getnonfreefonts.
+%\usepackage[scaled = 1.03]{inconsolata} %Makes \texttt the Inconsolata font
+%\usepackage{courier} %Automatically makes \texttt the Courier font
+\usepackage{textgreek} %Allows Greek symbols in normal mode
+%\usepackage{tocloft} % Needed for creating separate list in ToC
+\usepackage{etoolbox} % Also needed for creating list in ToC, also needed to form minipages in sequence environment to prevent page-breaking
+\usepackage{xcolor} % Needed for some additional colors and to allow tables with different colors
+\usepackage{calc} %Needed for addition and subtraction of variables (e.g., indentation values)
+\usepackage{multirow} %Needed for columns spanning multiple rows
+\usepackage[export]{adjustbox} %Needed to align multiple pictures within the same figure.
+\usepackage{wrapfig} %Needed to wrap text around figures
+\usepackage{subfig}
+\usepackage[font = sf, labelfont = {sc,bf}]{caption} %Needed to modify caption font etc.
+%\usepackage{bm} %Needed for bold math text
+\usepackage[]{mathpazo} %Use option osf for old-style figures and small-caps; use sc for small-caps only.
+\usepackage{sansmath} % Needed for sans-serif mathematics packages
+\usepackage[final, babel]{microtype}% Needed for micro typographical issues, like spacing small caps
+%\DisableLigatures[]{encoding = *, family = * } % Needed to disable ligatures for -, --, and ---
+% Add algorithms package
+% Reference: http://en.wikibooks.org/wiki/LaTeX/Algorithms#Typesetting_using_the_algorithmicx_package
+\usepackage[plain]{algorithm}
+%\usepackage{algpseudocode}
+\usepackage{algorithmicx}
+% In order to draw dashed boxes, we need the following packages:
+\usepackage{environ}
+\usepackage{tikz}
+%\usepackage{tgpagella} %Gives us better Palatino fonts (e.g., small caps)
+%\linespread{1.1538}         % Palatino needs more leading space (space between lines), and this produces a 15/11 ratio between leading space and font size.  This helps with giving inline math equations more room to breathe, and it balances out the relatively wide lines on the page.
+\usepackage[T1]{fontenc}
+ \usepackage[colorlinks=true, pdfstartview=FitV, 
+             linkcolor=black, citecolor=black, 
+             urlcolor=black, plainpages=false,
+             pdfpagelabels]{hyperref}
+ \hypersetup{ pdfauthor = {Phillip E.\,C. Compeau III}, 
+              pdftitle = {DCJ-Indel Sorting}, 
+              pdfkeywords = {Genome rearrangements, combinatorics}, 
+              pdfcreator = {pdfLaTeX with hyperref package}, 
+              pdfproducer = {pdfLaTeX} }
+
+\def\mySfFamily{\sffamily\sansmath} %Needed to turn on sans-serif math fonts locally
+\renewcommand{\textsf}[1]{{\sffamily\sansmath#1}} %And a command for sans-serif text
+
+%mathpazo somehow disables the \textsc command, so we need to bring it back.
+\renewcommand{\textsc}[1]{\text{\scshape #1}}
+\renewcommand{\sc}[1]{\text{\scshape #1}}
+
+%Defining a spaced small caps font.  Needed for the running header, etc.
+\newcommand{\textssc}[1]{\text{\scshape \fontfamily{ppl}\selectfont \textls[100]{\MakeLowercase{#1}}}}
+
+%Getting old-style numerals
+\newcommand{\oldstyle}[1]{\lowercase{\fontfamily{pplj}\selectfont #1}}
+
+% Adding a command to add vertical space in a tricky place.
+\newcommand{\fudgespace}[0]{\vspace{0.5\baselineskip}}
+
+%\usepackage[scaled=0.86]{berasans} %Changes sans-serif font to Berasans
+\renewcommand{\sfdefault}{uop} %Uses Optima for the sans-serif font
+
+%Changing caption fonts and other properties
+%\captionnamefont{\small\sffamily\scshape\bfseries} % Small figure names
+%\captiontitlefont{\small\mySfFamily} % Small captions
+%\captiondelim{\hspace{0.5em}} % Adding space instead of colon after Figure name and number
+%\changecaptionwidth %Setting caption width on next two lines
+%\captionwidth{0.856\textwidth} %Setting max caption width so that it matches the indentation of other environments.
+%\captionstyle[\centering]{} % If captions are one line, then center them.  Otherwise, ragged right.
+%\hangcaption % Hanging indent of the caption name after the first line of multiline caption.
+
+% And their CMYK equivalents
+\definecolor{lovelylightgray}{cmyk}{0, 0, 0, 0.098}
+\definecolor{palepink}{cmyk}{0.01, 0.17, 0.06, 0}
+\definecolor{paleblue}{cmyk}{0.2, 0.05, 0, 0}
+\definecolor{palegreen}{cmyk}{0.15, 0, 0.15, 0}
+\definecolor{darkgray}{cmyk}{0, 0, 0, 0.5}
+
+
+% Patch needed to fix hypertarget being too low.  We need to use \nop instead of \hypertarget.
+\makeatletter
+ \newcommand{\nop}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}
+\makeatother
+
+%Font color macros.  Lower case is plain font, upper case is boldface (preferable)
+\newcommand{\gray}[1]{\textcolor{Gray}{#1}}
+\newcommand{\Gray}[1]{\textcolor{Gray}{\textbf{#1}}}
+\newcommand{\darkgray}[1]{\textcolor{darkgray}{#1}}
+\newcommand{\DarkGray}[1]{\textcolor{darkgray}{\textbf{#1}}}
+\newcommand{\red}[1]{\textcolor{Red}{#1}}
+\newcommand{\Red}[1]{\textcolor{Red}{\textbf{#1}}}
+\newcommand{\blue}[1]{\textcolor{RoyalBlue}{#1}}
+\newcommand{\Blue}[1]{\textcolor{RoyalBlue}{\textbf{#1}}}
+\newcommand{\lightblue}[1]{\textcolor{Cerulean}{#1}}
+\newcommand{\LightBlue}[1]{\textcolor{Cerulean}{\textbf{#1}}}
+\newcommand{\green}[1]{\textcolor{ForestGreen}{#1}}
+\newcommand{\Green}[1]{\textcolor{ForestGreen}{\textbf{#1}}}
+\newcommand{\lightgreen}[1]{\textcolor{JungleGreen}{#1}}
+\newcommand{\LightGreen}[1]{\textcolor{JungleGreen}{\textbf{#1}}}
+\newcommand{\orange}[1]{\textcolor{Orange}{#1}}
+\newcommand{\Orange}[1]{\textcolor{Orange}{\textbf{#1}}}
+\newcommand{\pink}[1]{\textcolor{Rhodamine}{#1}}
+\newcommand{\Pink}[1]{\textcolor{Rhodamine}{\textbf{#1}}}
+\newcommand{\purple}[1]{\textcolor{Purple}{#1}}
+\newcommand{\Purple}[1]{\textcolor{Purple}{\textbf{#1}}}
+\newcommand{\brown}[1]{\textcolor{Brown}{#1}}
+\newcommand{\Brown}[1]{\textcolor{Brown}{\textbf{#1}}}
+\newcommand{\Black}[1]{\textbf{\textcolor{Black}{#1}}}
+\newcommand{\black}[1]{\textcolor{Black}{#1}}
+\newcommand{\emerald}[1]{\textcolor{Emerald}{#1}}
+\newcommand{\Emerald}[1]{\textcolor{Emerald}{\textbf{#1}}}
+\newcommand{\orangered}[1]{\textcolor{OrangeRed}{#1}}
+\newcommand{\OrangeRed}[1]{\textcolor{OrangeRed}{\textbf{#1}}}
+\newcommand{\olivegreen}[1]{\textcolor{OliveGreen}{#1}}
+\newcommand{\OliveGreen}[1]{\textcolor{OliveGreen}{\textbf{#1}}}
+\newcommand{\rawsienna}[1]{\textcolor{RawSienna}{#1}}
+\newcommand{\RawSienna}[1]{\textcolor{RawSienna}{\textbf{#1}}}
+\newcommand{\blueviolet}[1]{\textcolor{BlueViolet}{#1}}
+\newcommand{\BlueViolet}[1]{\textcolor{BlueViolet}{\textbf{#1}}}
+
+%Math Font color macros required for math + bold + color
+\newcommand{\MathGray}[1]{\textcolor{Gray}{\boldsymbol{#1}}}
+\newcommand{\MathRed}[1]{\textcolor{Red}{\boldsymbol{#1}}}
+\newcommand{\MathBlue}[1]{\textcolor{RoyalBlue}{\boldsymbol{#1}}}
+\newcommand{\MathLightBlue}[1]{\textcolor{Cerulean}{\boldsymbol{#1}}}
+\newcommand{\MathGreen}[1]{\textcolor{ForestGreen}{\boldsymbol{#1}}}
+\newcommand{\MathLightGreen}[1]{\textcolor{JungleGreen}{\boldsymbol{#1}}}
+\newcommand{\MathOrange}[1]{\Orange{\boldsymbol{#1}}}
+\newcommand{\MathPink}[1]{\textcolor{Rhodamine}{\boldsymbol{#1}}}
+\newcommand{\MathPurple}[1]{\textcolor{Purple}{\boldsymbol{#1}}}
+\newcommand{\MathBrown}[1]{\textcolor{Brown}{\boldsymbol{#1}}}
+\newcommand{\MathBlack}[1]{\textcolor{Black}{\boldsymbol{#1}}}
+
+%Transparent colors.  Lower case is plain font, upper case is boldface.
+%\newcommand{\fadedblue}[1]{\blue{\transparent{0.5} #1}}
+%\newcommand{\FadedBlue}[1]{\Blue{\transparent{0.2} #1}}
+
+% need a light gray box for problem statements and pseudocode
+\newcommand*{\graybox}[1]{\colorbox{lovelylightgray}{\parbox{0.9825\textwidth}{#1}}}
+\newcommand*{\pinkbox}[1]{\colorbox{palepink}{\parbox{0.9825\textwidth}{#1}}}
+\newcommand*{\bluebox}[1]{\colorbox{paleblue}{\parbox{0.9825\textwidth}{#1}}}
+\newcommand*{\greenbox}[1]{\colorbox{palegreen}{\parbox{0.9825\textwidth}{#1}}}
+
+
+%% Environ for creating dashed boxes around text.
+%\NewEnviron{elaboration}{
+%\par\noindent
+%\begin{tikzpicture}
+%\node[rectangle, minimum width=\textwidth, fill=lovelylightgray] (m) {\begin{minipage}{\textwidth}\BODY\end{minipage}};
+%%\draw[white, fill=lightgray] (m.south west) rectangle (m.north east); 
+%\end{tikzpicture}
+%}
+
+%Counting the Computational Problems that we encounter
+\newcounter{problem}[chapter]
+
+\newtheorem*{theorem}{Theorem} %Theorem environment, the star turns off automatic numbering
+
+% Need theorem environment in order to name theorems and properties
+\newtheoremstyle{named}{}{}{\itshape}{}{\bfseries}{:}{.5em}{\thmnote{#3 }#1}
+\theoremstyle{named}
+\newtheorem*{namedtheorem}{Theorem}
+\newtheorem*{namedproperty}{Property}
+
+\newtheorem{proposition}{Proposition} % Needed for technical papers.
+\newtheorem{lemma}{Lemma} % Needed for technical papers.
+\newtheorem{corollary}{Corollary} % Needed for technical papers.
+
+
+% Environ for creating boxes around text.
+% Note: it automatically calles \mySfFamily to use the sans-serif font; could use \ttfamily to use fixed-width font but it looks stupid.
+\NewEnviron{elaboration}{\mySfFamily
+\noindent\graybox{\BODY}
+\vspace{0.5\baselineskip}
+}
+
+%Environment for representing Biological Sequences (font: Courier).  Takes 1 parameter, which is the font size.  Default is 1.04 em.  Leading space is set to font size.
+\newenvironment{sequence}[1][1.04]{\hyphenpenalty 10000
+\exhyphenpenalty 10000
+\centering\noindent\fontfamily{pcr}\selectfont\fontsize{#1 em}{#1 em}\selectfont}{\par\noindent}
+
+%Environment for representing biological sequences (font: Courier) WITHOUT centering, for embedding within tables, etc..  Takes 1 parameter, which is the font size.  Default is 1.04 em.  Leading space is set to font size.
+\newenvironment{tablesequence}[1][1.04]{\hyphenpenalty 10000
+\exhyphenpenalty 10000
+\raggedright\noindent\fontfamily{pcr}\selectfont\fontsize{#1 em}{#1 em}\selectfont}{\par\noindent}
+
+%Environment for representing fixed width fonts (font: texttt).  Takes 1 parameter, which is the font size.  Default is 1.15em.  Leading space is set to font size.
+\newenvironment{ttsequence}[1][1.15]{\centering\noindent\ttfamily\fontsize{#1em}{#1em}\selectfont}{\par\noindent}
+
+%Prevent different environments from spreading across page
+\AtBeginEnvironment{sequence}{\centering\begin{minipage}{\textwidth}}
+\AtEndEnvironment{sequence}{\end{minipage}}
+\AtBeginEnvironment{ttsequence}{\centering\begin{minipage}{\textwidth}}
+\AtEndEnvironment{ttsequence}{\end{minipage}}
+
+% Environment for representing computational problems.  Takes four parameters: #1 = name of problem, #2 = brief synopsis, #3 = input, #4 = output.
+% Usually need \\ before the problem to make the spacing work out.
+\newenvironment{problem}[4][WARNING: No Problem Given]{\parbox{0.928\textwidth}{\vspace{0.35ex}\noindent\gray{\rule{0.928\textwidth}{0.21ex}}\vspace{0.89ex}\par\textbf{#1}:\par
+\textit{#2} \vspace{1.42ex} \par\setlength{\leftskip}{2em}\noindent \textbf{Input}: #3\\* \textbf{Output}: #4\par\setlength{\leftskip}{0em}\noindent \gray{\rule{0.928\textwidth}{0.21ex}}}}{\vspace{0.5\baselineskip}\par\noindent}%environment for stating computational problems.
+
+% Environment for Q-BOXES, which I call "STOP and think".  Takes no arguments.
+%\newenvironment{qbox}[0]{\par\noindent\marginpar{\centering\vskip-25pt\includegraphics[width = 3.6em]{images/logos/stop_sign_no_border}}\Red{STOP and Think:}}{\par\noindent}
+\newenvironment{qbox}[1][WARNING: QBOX EMPTY]{\noindent\marginpar{\centering\vskip-4.4ex\includegraphics[width = 3.6em]{images/logos/stop_sign_no_border}}\centering\pinkbox{\centering\parbox{0.928\textwidth}{\Red{STOP and Think: }{#1}}}}{\vspace{0.5\baselineskip}\par\noindent}
+
+% Environment for exercises, which I call "EXERCISE Breaks".  Takes no arguments.
+%\newenvironment{exercise}[0]{\par\noindent\marginpar{\centering\vskip-25pt\includegraphics[width = 3.6em]{images/logos/exercise}}{\color{BlueViolet}\textbf{EXERCISE BREAK: }}}{\par\noindent}
+\newenvironment{exercise}[1][WARNING: EXERCISE EMPTY]{\noindent\marginpar{\centering\vskip-4.8ex\includegraphics[width = 3.6em]{images/logos/exercise}}\centering\bluebox{\centering\parbox{0.928\textwidth}{{\color{BlueViolet}\textbf{EXERCISE BREAK: }} #1}}}{\vspace{0.5\baselineskip}\par\noindent}
+
+%Environment for final challenges.  Takes one parameter. #1 = description of challenge.
+%\newenvironment{finalchallenge}[1][NO NAME]{\noindent{\Green{CHALLENGE PROBLEM: }}
+%{\par\noindent}
+\newenvironment{finalchallenge}[2][WARNING: CHALLENGE EMPTY]{\noindent\centering\greenbox{\centering\parbox{0.928\textwidth}{\Green{CHALLENGE PROBLEM: } #2}}}{\par\noindent}
+
+%\marginpar{\centering\vskip-25pt\href{http://research.stepic.org}{\includegraphics[width = 3.6em]{images/logos/stepic_logo_dark}}}
+
+%Command for Central Question of chapter.  Takes the text in the central question as the lone argument.
+\newcommand{\centralquestion}[1][\textbf{WARNING: NO QUESTION SPECIFIED}]{\par\noindent\textbf{CENTRAL QUESTION}: {#1}\\}
+
+%Command for creating DETOUR reference.  Takes two parameters.  The first is the name of the DETOUR; the second is a short ID for the DETOUR to create hyper targets.
+\newcommand{\takedetour}[2][Probabilities of Patterns in a String]{\nop{return:#2}\marginpar{\centering\vskip-3.1ex\hyperlink{detour:#2}{\includegraphics[width = 6em]{images/logos/detour_blank_no_bg_outline}}\hskip-7em\vskip-4.9ex\parbox{7em}{\small\Black{~~~~\textsc{PAGE}~{\pageref{subsec:#2}}}}}\hyperlink{detour:#2}{\Orange{\textbf{DETOUR: #1}}}}
+
+%Command with background on detour signs
+%\newcommand{\takedetour}[2][Probabilities of Patterns in a String]{\nop{return:#2}\marginpar{\centering\vskip-2.67ex\hyperlink{detour:#2}{\includegraphics[width = 4.8em]{images/logos/detour_blank_no_bg_outline}}\hskip-7em\vskip-4.4ex\parbox{7em}{\footnotesize\Black{~~~~~~~\textsc{PAGE}~{\pageref{subsec:#2}}}}}\hyperlink{detour:#2}{\Orange{\textbf{DETOUR: #1}}}}
+
+%Same as the previous command, but doesn't create reverse hyperlinks; in the case that we cite the same detour more than once
+\newcommand{\takedetouragain}[2][Probabilities of Patterns in a String]{\marginpar{\centering\vskip-3.1ex\hyperlink{detour:#2}{\includegraphics[width = 6em]{images/logos/detour_blank_no_bg_outline}}\hskip-7em\vskip-4.9ex\parbox{7em}{\small\Black{~~~~\textsc{PAGE}~{\pageref{subsec:#2}}}}}\hyperlink{detour:#2}{\Orange{\textbf{DETOUR: #1}}}}
+
+%Command with background on detour signs
+%\newcommand{\takedetouragain}[2][Probabilities of Patterns in a String]{\marginpar{\centering\vskip-2.67ex\hyperlink{detour:#2}{\includegraphics[width = 4.8em]{images/logos/detour_blank}}\hskip-7em\vskip-4.4ex\parbox{7em}{\footnotesize\Black{~~~~~~~\textsc{PAGE}~{\pageref{subsec:#2}}}}}\hyperlink{detour:#2}{\Orange{\textbf{DETOUR: #1}}}}
+
+%When we call a DETOUR, we need to create a return hyperlink to go back to the text.  The problem is this needs to go at the end of the DETOUR, but LaTeX doesn't allow you to call a parameter at the end of an environment.  Instead, we create \detourID, which is initially set to null and is updated with the problem ID every time a detour is created.
+\newcommand{\detourID}{}
+
+%Environment for creating DETOUR text.  Before the detour, it creates a new section with appropriate labeling.  After the detour, it adds a link back in the text. Takes two parameters.  The first is the name of the DETOUR; the second is a short ID for the DETOUR to create hypertargets.  The second parmaeter must exactly match the second parameter in the related \takedetour command from the main text.
+\newenvironment{detour}[2][Probabilities of Patterns in a String]{\nop{detour:#2}{}\renewcommand{\detourID}{#2}\phantomsection\subsection{#1}\label{subsec:#2}}{}
+
+%\phantomsection\subsection{#1}\label{subsec:#2}}{\marginpar{\hyperlink{return:#2}{\includegraphics[width=10mm]{images/logos/uturn_icon}}}}
+
+%Command for linking to a Rosalind Problem.  Takes 2 parameters. #1 = Website address of problem. #2 = Name of problem.  #3 = Amount of vertical space (Default is -42)
+\newcommand{\computationalproblem}[2][WARNING: Empty Problem]{%
+\refstepcounter{problem}
+\marginpar{\centering{\vskip#2ex}\href{http://rosalind.info/problems/\thechapter\alph{problem}}{\phantomsection\includegraphics[width = 3.6em]{images/logos/rosalind_no_interior}} \vskip-5.95ex{\Large\thechapter\Alph{problem}}} \par}
+
+%Command for big-O notation.  Takes one argument, which is what is inside the parentheses.
+\newcommand{\bigO}[1]{\ensuremath{\mathop{}\mathopen{}\mathcal{O}\mathopen{}\left(#1\right)}}
+
+%Command for correctly typesetting differential operators
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+%Textvar is an environment for making variable text.  It is currently set simply to the italic font.
+\newcommand{\textvar}[1]{\textit{#1}}
+
+%Textarray is an environment for making text represented by an array.  It is currently set simply to the italic  + bold font.
+\newcommand{\textarray}[1]{\textsc{#1}}
+
+%Textdef is needed to define a new term.  It currently is just bold.
+\newcommand{\textdef}[1]{\textbf{#1}}
+
+% Roman number
+\makeatletter
+\newcommand{\rmnum}[1]{\romannumeral #1}
+\newcommand{\Rmnum}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\makeatother
+% nucleotide
+\newcommand{\textnucl}[1]{{\fontfamily{pcr}\fontsize{1.04em}{1.04em}\selectfont \text{#1}}}
+\newcommand{\textnuclbf}[1]{\textnucl{\textbf{#1}}}
+
+\newcommand{\textttbf}[1]{\texttt{\textbf{#1}}}
+
+%Following macro is needed to write a nucleotide with a subscript.  It takes two arguments; 1. the nucleotide and 2. the subscript.
+\newcommand{\nuclsubs}[2]{$\textnucl{#1}_{\textnucl{#2}}$}
+\newcommand{\nuclsubsbf}[2]{$\textnuclbf{#1}_{\textnuclbf{#2}}$}
+
+\newcommand{\ttsubs}[2]{$\texttt{#1}_{\texttt{#2}}$}
+\newcommand{\ttsubsbf}[2]{$\texttt{\textbf{#1}}_{\texttt{\textbf{#2}}}$}
+
+%To indent algorithms so that the first line matches text indentation, we need to use a leftskip that is equal to the paragraph indent minus the algorithmic indent, so this must be defined as \algindent
+\newlength{\algindent}
+\setlength{\algindent}{\parindent-\algorithmicindent}
+
+% We must also rewrite the commands to make them match the desired pseudocode.  We only use "if", "else if", "for", "while", "output", and "return" in addition to the commands beginning and ending the algorithm.
+\algblockdefx[Algorithm]{Algorithm}{EndAlgorithm}[2]{\textalg{#1}(#2)}{}
+\algblockdefx[For]{For}{EndFor}[1]{\textbf{for} #1}{}
+\algblockdefx[If]{If}{EndIf}[1]{\textbf{if} #1}{}
+\algcblockdefx[If]{If}{ElsIf}{EndIf}[1]{\textbf{else if} #1}{}
+\algcblockdefx[If]{If}{ElsIf}{Else}[1]{\textbf{else if} #1}{\textbf{else}\vspace{-0.35ex}} %This form of "If" ends with "Else" instead of "EndIf"
+\algcblockdefx[If]{If}{Els}{EndIf}[1]{\textbf{else} #1}{} %This form of "If" ends with "Else" with no "EndIf".  NOTE that we need "Els" instead of "Else" for this command in order to prevent a bug caused by having multiple forms of If
+\algblockdefx[While]{While}{EndWhile}[1]{\textbf{while} #1}{}
+\renewcommand{\output}[1]{\textbf{output} #1}
+\newcommand{\return}{\textbf{return}}
+
+% These commands prevent an extra line of text from being added at the end of "endif" statements, etc.
+\algtext*{EndAlgorithm}
+\algtext*{EndIf}
+\algtext*{EndWhile}
+\algtext*{EndFor}
+
+%% within the algorithm, make it easy to call the output function. Have to add a dumb space with \; afterwards
+\renewcommand{\output}{\textbf{output}\;}
+
+%% Add text macro for algorithm names
+\newcommand{\textfunc}[1]{\textsc{#1}}
+\newcommand{\textalg}[1]{\textbf{\textsc{#1}}}
+
+
+%% TIMES FONT - replacements for Computer Modern
+%%   This package will replace the default font with a
+%%   Times-Roman font with math support.
+% \usepackage{mathptmx}
+
+%% INDEX
+%   Uncomment the following two lines to create an index: 
+% \usepackage{makeidx}
+% \makeindex
+%   You will need to uncomment the \printindex line near the
+%   bibliography to display the index.  Use the command
+% \index{keyword} 
+%   within the text to create an entry in the index for keyword.
+%   To compile a LaTeX document with an index the 'makeindex'
+%   command will need to be run.  See the wiki for more details.
+
+%% HYPERLINKS
+%   To create a PDF with hyperlinks, you need to include the hyperref package.
+%   THIS HAS TO BE THE LAST PACKAGE INCLUDED!
+%   Note that the options plainpages=false and pdfpagelabels exist
+%   to fix indexing associated with having both (ii) and (2) as pages.
+%   Also, all links must be black according to OGS.
+%   See: http://www.tex.ac.uk/cgi-bin/texfaq2html?label=hyperdupdest
+%   Note: This may not work correctly with all DVI viewers (i.e. Yap breaks).
+%   NOTE: hyperref will NOT work in draft mode, as noted above.
+% \usepackage[colorlinks=true, pdfstartview=FitV, 
+%             linkcolor=black, citecolor=black, 
+%             urlcolor=black, plainpages=false,
+%             pdfpagelabels]{hyperref}
+% \hypersetup{ pdfauthor = {Your Name Here}, 
+%              pdftitle = {The Title of The Dissertation}, 
+%              pdfkeywords = {Keywords for Searching}, 
+%              pdfcreator = {pdfLaTeX with hyperref package}, 
+%              pdfproducer = {pdfLaTeX} }
+
+
+\begin{document}
+
+%% FRONT MATTER
+%
+%  All of the front matter.
+%  This includes the title, degree, dedication, vita, abstract, etc..
+%  Modify the file template_frontmatter.tex to change these pages.
+\include{Thesis_frontmatter}
+
+
+
+
+
+
+%% DISSERTATION
+
+\input{Chapters/Rearrangements.tex}
+
+\input{Chapters/BMC_2012.tex}
+
+\input{Chapters/wabi_2014.tex}
+
+
+
+
+\appendix
+\chapter{Final notes}
+  Remove me in case of abdominal pain.
+
+
+
+
+
+%% END MATTER
+% \printindex %% Uncomment to display the index
+ \nocite{} 
+ \bibliographystyle{alpha}  %% This is just my personal favorite style. 
+%                              There are many others.
+ \bibliography{Thesis_bibliography}  %% This looks for the bibliography in myrefs.bib 
+%                          which should be formatted as a bibtex file.
+\end{document}
+

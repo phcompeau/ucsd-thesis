@@ -1,0 +1,53 @@
+\contentsline {frontmatter}{\numberline {}Signature Page}{iii}{section*.1}
+\contentsline {frontmatter}{\numberline {}Table of Contents}{iv}{section*.2}
+\contentsline {frontmatter}{\numberline {}List of Figures}{vi}{section*.3}
+\contentsline {frontmatter}{\numberline {}List of Tables}{xi}{section*.4}
+\contentsline {frontmatter}{\numberline {}Acknowledgements}{xii}{section*.5}
+\contentsline {frontmatter}{\numberline {}Vita and Publications}{xiii}{section*.6}
+\contentsline {frontmatter}{\numberline {}Abstract of the Dissertation}{xiv}{section*.7}
+\contentsline {chapter}{\numberline {Chapter\nobreakspace {}1}Are There Fragile Regions in the Human Genome?}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Of Mice and Men}{1}{section.1.1}
+\contentsline {subsection}{\numberline {1.1.1}How different are the human and mouse genomes?}{1}{subsection.1.1.1}
+\contentsline {subsection}{\numberline {1.1.2}Synteny blocks}{2}{subsection.1.1.2}
+\contentsline {subsection}{\numberline {1.1.3}Reversals}{3}{subsection.1.1.3}
+\contentsline {subsection}{\numberline {1.1.4}Rearrangement hotspots}{4}{subsection.1.1.4}
+\contentsline {section}{\numberline {1.2}The Random Breakage Model of Chromosome Evolution}{7}{section.1.2}
+\contentsline {section}{\numberline {1.3}Sorting by Reversals}{11}{section.1.3}
+\contentsline {section}{\numberline {1.4}A Greedy Algorithm for Sorting by Reversals}{15}{section.1.4}
+\contentsline {section}{\numberline {1.5}Breakpoints}{18}{section.1.5}
+\contentsline {subsection}{\numberline {1.5.1}What are breakpoints?}{18}{subsection.1.5.1}
+\contentsline {subsection}{\numberline {1.5.2}Counting breakpoints}{19}{subsection.1.5.2}
+\contentsline {subsection}{\numberline {1.5.3}Sorting by reversals as breakpoint elimination}{21}{subsection.1.5.3}
+\contentsline {section}{\numberline {1.6}Rearrangements in Tumor Genomes}{23}{section.1.6}
+\contentsline {section}{\numberline {1.7}From Unichromosomal to Multichromosomal Genomes}{24}{section.1.7}
+\contentsline {subsection}{\numberline {1.7.1}Translocations, fusions, and fissions}{24}{subsection.1.7.1}
+\contentsline {subsection}{\numberline {1.7.2}From a permutation to a graph}{26}{subsection.1.7.2}
+\contentsline {subsection}{\numberline {1.7.3}2-breaks}{27}{subsection.1.7.3}
+\contentsline {section}{\numberline {1.8}Breakpoint Graphs}{30}{section.1.8}
+\contentsline {section}{\numberline {1.9}Computing the 2-Break Distance}{35}{section.1.9}
+\contentsline {section}{\numberline {1.10}Rearrangement Hotspots in the Human Genome}{37}{section.1.10}
+\contentsline {subsection}{\numberline {1.10.1}The Random Breakage Model meets the 2-Break Distance Theorem}{37}{subsection.1.10.1}
+\contentsline {subsection}{\numberline {1.10.2}The Fragile Breakage Model}{38}{subsection.1.10.2}
+\contentsline {section}{\numberline {1.11}Epilogue: Synteny Block Construction}{40}{section.1.11}
+\contentsline {subsection}{\numberline {1.11.1}Genomic dot-plots}{41}{subsection.1.11.1}
+\contentsline {subsection}{\numberline {1.11.2}Finding shared \emph {k}-mers}{41}{subsection.1.11.2}
+\contentsline {subsection}{\numberline {1.11.3}From shared \emph {k}-mers to synteny blocks}{45}{subsection.1.11.3}
+\contentsline {subsection}{\numberline {1.11.4}Synteny blocks as connected components in graphs}{46}{subsection.1.11.4}
+\contentsline {section}{\numberline {1.12}Open Problem: Can Rearrangements Shed Light on Bacterial Evolution?}{50}{section.1.12}
+\contentsline {section}{\numberline {1.13}Detours}{53}{section.1.13}
+\contentsline {subsection}{\numberline {1.13.1}Why is the gene content of mammalian X chromosomes so conserved?}{53}{subsection.1.13.1}
+\contentsline {subsection}{\numberline {1.13.2}Discovery of genome rearrangements}{53}{subsection.1.13.2}
+\contentsline {subsection}{\numberline {1.13.3}The exponential distribution}{54}{subsection.1.13.3}
+\contentsline {subsection}{\numberline {1.13.4}Bill Gates and David X. Cohen flip pancakes}{55}{subsection.1.13.4}
+\contentsline {subsection}{\numberline {1.13.5}Similar problems with different fates}{57}{subsection.1.13.5}
+\contentsline {section}{\numberline {1.14}Bibliography Notes}{59}{section.1.14}
+\contentsline {chapter}{\numberline {Chapter\nobreakspace {}2}DCJ-Indel Sorting Revisited}{61}{chapter.2}
+\contentsline {section}{\numberline {2.1}Abstract}{61}{section.2.1}
+\contentsline {chapter}{\numberline {Chapter\nobreakspace {}3}A Generalized Cost Model for DCJ-Indel Sorting}{83}{chapter.3}
+\contentsline {section}{\numberline {3.1}Preliminaries}{83}{section.3.1}
+\contentsline {section}{\numberline {3.2}Encoding Indels as DCJs}{85}{section.3.2}
+\contentsline {section}{\numberline {3.3}DCJ-Indel Sorting Genomes without Singletons}{88}{section.3.3}
+\contentsline {section}{\numberline {3.4}Incorporating Singletons into DCJ-Indel Sorting}{94}{section.3.4}
+\contentsline {section}{\numberline {3.5}Conclusion}{96}{section.3.5}
+\contentsline {chapter}{\numberline {Appendix\nobreakspace {}A}Final notes}{99}{appendix.A}
+\contentsline {backmatter}{Bibliography}{100}{appendix*.107}

@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2013)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: Thesis.aux
+A level-1 auxiliary file: Thesis_frontmatter.aux
+The style file: alpha.bst
+Database file #1: Thesis_bibliography.bib
+Warning--I didn't find a database entry for "compeau"
+You've used 35 entries,
+            2543 wiz_defined-function locations,
+            781 strings with 9762 characters,
+and the built_in function-call counts, 15440 in all, are:
+= -- 1562
+> -- 782
+< -- 12
++ -- 275
+- -- 266
+* -- 1224
+:= -- 2558
+add.period$ -- 108
+call.type$ -- 35
+change.case$ -- 232
+chr.to.int$ -- 30
+cite$ -- 35
+duplicate$ -- 550
+empty$ -- 1066
+format.name$ -- 302
+if$ -- 3121
+int.to.chr$ -- 6
+int.to.str$ -- 0
+missing$ -- 36
+newline$ -- 180
+num.names$ -- 109
+pop$ -- 154
+preamble$ -- 1
+purify$ -- 268
+quote$ -- 0
+skip$ -- 478
+stack$ -- 0
+substring$ -- 1013
+swap$ -- 84
+text.length$ -- 12
+text.prefix$ -- 5
+top$ -- 0
+type$ -- 276
+warning$ -- 0
+while$ -- 157
+width$ -- 40
+write$ -- 463
+(There was 1 warning)

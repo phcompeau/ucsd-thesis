@@ -1,0 +1,53 @@
+\BOOKMARK [0][-]{section*.1}{Signature Page}{}% 1
+\BOOKMARK [0][-]{section*.2}{Table of Contents}{}% 2
+\BOOKMARK [0][-]{section*.3}{List of Figures}{}% 3
+\BOOKMARK [0][-]{section*.4}{List of Tables}{}% 4
+\BOOKMARK [0][-]{section*.5}{Acknowledgements}{}% 5
+\BOOKMARK [0][-]{section*.6}{Vita and Publications}{}% 6
+\BOOKMARK [0][-]{section*.7}{Abstract of the Dissertation}{}% 7
+\BOOKMARK [0][-]{chapter.1}{Are There Fragile Regions in the Human Genome?}{}% 8
+\BOOKMARK [1][-]{section.1.1}{Of Mice and Men}{chapter.1}% 9
+\BOOKMARK [2][-]{subsection.1.1.1}{How different are the human and mouse genomes?}{section.1.1}% 10
+\BOOKMARK [2][-]{subsection.1.1.2}{Synteny blocks}{section.1.1}% 11
+\BOOKMARK [2][-]{subsection.1.1.3}{Reversals}{section.1.1}% 12
+\BOOKMARK [2][-]{subsection.1.1.4}{Rearrangement hotspots}{section.1.1}% 13
+\BOOKMARK [1][-]{section.1.2}{The Random Breakage Model of Chromosome Evolution}{chapter.1}% 14
+\BOOKMARK [1][-]{section.1.3}{Sorting by Reversals}{chapter.1}% 15
+\BOOKMARK [1][-]{section.1.4}{A Greedy Algorithm for Sorting by Reversals}{chapter.1}% 16
+\BOOKMARK [1][-]{section.1.5}{Breakpoints}{chapter.1}% 17
+\BOOKMARK [2][-]{subsection.1.5.1}{What are breakpoints?}{section.1.5}% 18
+\BOOKMARK [2][-]{subsection.1.5.2}{Counting breakpoints}{section.1.5}% 19
+\BOOKMARK [2][-]{subsection.1.5.3}{Sorting by reversals as breakpoint elimination}{section.1.5}% 20
+\BOOKMARK [1][-]{section.1.6}{Rearrangements in Tumor Genomes}{chapter.1}% 21
+\BOOKMARK [1][-]{section.1.7}{From Unichromosomal to Multichromosomal Genomes}{chapter.1}% 22
+\BOOKMARK [2][-]{subsection.1.7.1}{Translocations, fusions, and fissions}{section.1.7}% 23
+\BOOKMARK [2][-]{subsection.1.7.2}{From a permutation to a graph}{section.1.7}% 24
+\BOOKMARK [2][-]{subsection.1.7.3}{2-breaks}{section.1.7}% 25
+\BOOKMARK [1][-]{section.1.8}{Breakpoint Graphs}{chapter.1}% 26
+\BOOKMARK [1][-]{section.1.9}{Computing the 2-Break Distance}{chapter.1}% 27
+\BOOKMARK [1][-]{section.1.10}{Rearrangement Hotspots in the Human Genome}{chapter.1}% 28
+\BOOKMARK [2][-]{subsection.1.10.1}{The Random Breakage Model meets the 2-Break Distance Theorem}{section.1.10}% 29
+\BOOKMARK [2][-]{subsection.1.10.2}{The Fragile Breakage Model}{section.1.10}% 30
+\BOOKMARK [1][-]{section.1.11}{Epilogue: Synteny Block Construction}{chapter.1}% 31
+\BOOKMARK [2][-]{subsection.1.11.1}{Genomic dot-plots}{section.1.11}% 32
+\BOOKMARK [2][-]{subsection.1.11.2}{Finding shared k-mers}{section.1.11}% 33
+\BOOKMARK [2][-]{subsection.1.11.3}{From shared k-mers to synteny blocks}{section.1.11}% 34
+\BOOKMARK [2][-]{subsection.1.11.4}{Synteny blocks as connected components in graphs}{section.1.11}% 35
+\BOOKMARK [1][-]{section.1.12}{Open Problem: Can Rearrangements Shed Light on Bacterial Evolution?}{chapter.1}% 36
+\BOOKMARK [1][-]{section.1.13}{Detours}{chapter.1}% 37
+\BOOKMARK [2][-]{subsection.1.13.1}{Why is the gene content of mammalian X chromosomes so conserved?}{section.1.13}% 38
+\BOOKMARK [2][-]{subsection.1.13.2}{Discovery of genome rearrangements}{section.1.13}% 39
+\BOOKMARK [2][-]{subsection.1.13.3}{The exponential distribution}{section.1.13}% 40
+\BOOKMARK [2][-]{subsection.1.13.4}{Bill Gates and David X. Cohen flip pancakes}{section.1.13}% 41
+\BOOKMARK [2][-]{subsection.1.13.5}{Similar problems with different fates}{section.1.13}% 42
+\BOOKMARK [1][-]{section.1.14}{Bibliography Notes}{chapter.1}% 43
+\BOOKMARK [0][-]{chapter.2}{DCJ-Indel Sorting Revisited}{}% 44
+\BOOKMARK [1][-]{section.2.1}{Abstract}{chapter.2}% 45
+\BOOKMARK [0][-]{chapter.3}{A Generalized Cost Model for DCJ-Indel Sorting}{}% 46
+\BOOKMARK [1][-]{section.3.1}{Preliminaries}{chapter.3}% 47
+\BOOKMARK [1][-]{section.3.2}{Encoding Indels as DCJs}{chapter.3}% 48
+\BOOKMARK [1][-]{section.3.3}{DCJ-Indel Sorting Genomes without Singletons}{chapter.3}% 49
+\BOOKMARK [1][-]{section.3.4}{Incorporating Singletons into DCJ-Indel Sorting}{chapter.3}% 50
+\BOOKMARK [1][-]{section.3.5}{Conclusion}{chapter.3}% 51
+\BOOKMARK [0][-]{appendix.A}{Final notes}{}% 52
+\BOOKMARK [0][-]{appendix*.107}{Bibliography}{}% 53

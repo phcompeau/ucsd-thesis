@@ -1,0 +1,417 @@
+\chapter{DCJ-Indel Sorting Revisited}
+
+\section{Abstract}        % Do not use inserted blank lines (ie \\) until main body of text.
+{\bf Background}: The introduction of the double cut and join operation (DCJ) caused a flurry of research into the study of multichromosomal rearrangements.  However, little of this work has incorporated indels (i.e., insertions and deletions of chromosomes and chromosomal intervals) into the calculation of genomic distance functions, with the exception of Braga et al., who provided a linear time algorithm for the problem of DCJ-indel sorting.  Although their algorithm only takes linear time, its derivation is lengthy and depends on a large number of possible cases.  
+
+{\bf Results}:  We note the simple idea that a deletion of a chromosomal interval can be viewed as a DCJ that creates a new circular chromosome.  This framework will allow us to amortize indels as DCJs, which in turn permits the application of the classical breakpoint graph to obtain a simplified indel model that still solves the problem of DCJ-indel sorting in linear time via a more concise formulation that relies on the simpler problem of DCJ sorting.  Furthermore, we can extend this result to fully characterize the solution space of DCJ-indel sorting.
+
+{\bf Conclusion}: Encoding indels as DCJ operations offers a new insight into why the problem of DCJ-indel sorting is not ultimately any more difficult than that of sorting by DCJs alone.  There is still room for research in this area, most notably the problem of sorting when the cost of indels is allowed to vary with respect to the cost of a DCJ and we demand a minimum cost transformation of one genome into another.
+
+\section*{Keywords}
+
+Genome rearrangements, DCJ, indels, sorting, solution space
+
+
+\section*{Background}
+In the simplest terms, DNA may mutate in two fundamentally different ways.  On the one hand, single-nucleotide polymorphisms alter the base at a single position of the nucleic acid polymer; on the other hand, huge mutations called chromosomal rearrangements can move around, duplicate, insert, or delete huge blocks of DNA, often from one chromosome to another.
+
+Chromosomal rearrangements were first observed by Dobzhansky and Sturtevant in $1938$ (\cite{dobzhansky}), but extensive efforts to quantify their study did not take off until the early 1990s.  In the last two decades, a number of discrete genomic models have been proposed and studied (see \cite{fertin2009} for an overview of the combinatorics of genome rearrangements).
+
+Having selected a genomic model and a collection of genome operations to consider, the standard algorithmic problem is the computation of the {\em distance} between two genomes $\Pi$ and $\Gamma$, or the minimum number of allowable operations required to transform $\Pi$ into $\Gamma$; the more difficult problem of {\em sorting} demands the operations themselves.  The first historical example of such a discrete genomic distance is the {\em prefix reversal distance} for permutations (which model the order of genes along a single linear chromosome), introduced in \cite{dweighter} and bounded in \cite{gates, heydari, chitturi}.  The computation of prefix reversal distance has been proposed to be $NP$-Hard (see \cite{bulteau}).
+
+More recent research has moved past permutations and toward multichromosomal genomic models that incorporate both linear and circular chromosomes.  One of these models, which we will study in this paper, models the chromosomes of a genome with paths and cycles in a graph.  For this model, the double cut and join operation (DCJ) was introduced in \cite{yancopoulos} and incorporates segment reversals with a number of other operations.  Interestingly, a linear time greedy algorithm exists for DCJ sorting two genomes having equal gene content (see \cite{bergeron}).
+
+The incorporation of insertions and deletions of chromosomes and chromosomal intervals (collectively called {\em indels}) into DCJ distance was discussed in \cite{yancopoulos2009} and quantified rigorously in \cite{braga2010}.  The latter authors provided a linear time algorithm for the associated problem of {\em DCJ-indel sorting}, which gives a minimum collection of DCJ and indel operations required to transform one genome into another.  Yet their argument is case-ridden, and so in this paper, which builds upon\cite{compeau}, we wish to provide a much simpler presentation of DCJ-indel sorting that still yields a linear-time solution to the problem.
+
+
+\section*{Main Text}
+
+\subsection*{Preliminaries}
+Say that we are given a perfect matching on $2N$ labeled vertices $\mathcal{V}$, forming a set $\mathcal{G}$ of $N$ edges called {\em genes}; the vertices of each gene form its {\em head} and {\em tail}.  We define a {\em genome} $\Pi$ as the edge-disjoint union of two matchings.  The {\em genes} of $\Pi$, denoted $g(\Pi)$, form a matching on $\mathcal{V}$ such that $g(\Pi) \subseteq \mathcal{G}$; the {\em adjacencies} of $\Pi$, denoted $a(\Pi)$, form a matching on $V(g(\Pi))$.  We color the genes of $\Pi$ black and the adjacencies of $\Pi$ blue (see Figure 1(a)).
+
+A consequence of these definitions is that $\Pi$ comprises a disjoint collection of paths and cycles, where each connected component alternates between black genes and blue adjacencies.  Each component of $\Pi$ is called a {\em chromosome}; paths (cycles) of $\Pi$ define {\em linear} ({\em circular}) chromosomes of $\Pi$.  The endpoint $v$ of a path in $\Pi$ is called a {\em telomere} of $\Pi$; $v$ is not incident to an adjacency, and so for clerical purposes, we say that $v$ has the {\em null adjacency} $\{v, \emptyset\}$.  A genome consisting of only circular (linear) chromosomes is called a {\em circular} ({\em linear}) {\em genome}.  Note that $\Pi$ is circular if and only if the edges of $a(\Pi)$ form a perfect matching on $V(\Pi)$.
+
+Henceforth, we only consider genome pairs $\{\Pi, \Gamma\}$ such that $g(\Pi) \cup g(\Gamma) = \mathcal{G}$.  A workhorse data structure encoding the relationship between $\Pi$ and $\Gamma$ is the {\em breakpoint graph} (\cite{bafna}), denoted by $\mathrm{B}(\Pi, \Gamma)$ and defined as the edge-disjoint union$^\textrm{a}$ of $a(\Pi)$ and $a(\Gamma)$, where adjacencies of $\Gamma$ will be colored red (Figure 1 (b)).  Observe that $B(\Pi, \Gamma)$ is also a collection of disjoint paths and cycles, which alternate between red and blue edges.  The {\em length} of a connected component of $\mathrm{B}(\Pi, \Gamma)$ is its total number of edges; we consider an isolated vertex in $\mathrm{B}(\Pi, \Gamma)$ to be a path of length $0$.
+The breakpoint graph is also the line graph of the {\em adjacency graph}, which was first defined in \cite{bergeron} and has also been used in rearrangement studies.
+
+A {\em double cut and join} operation (DCJ) on $\Pi$ (\cite{yancopoulos}) {\em uses} one or two adjacencies of $\Pi$ via one of the following four operations to produce a new genome $\Pi'$:
+
+\begin{enumerate}
+\item $\{v, w\}, \{x, y\} \longrightarrow \{v, x\}, \{w, y\} $
+\item $\{v, w\}, \{x, \emptyset\} \longrightarrow \{v, x\}, \{w, \emptyset\}$
+\item $\{v, \emptyset\}, \{w, \emptyset\} \longrightarrow \{v, w\}$
+\item $\{v, w\} \hspace{29 pt} \longrightarrow \{v, \emptyset\}, \{w, \emptyset\}$
+\end{enumerate}
+The DCJ incorporates a wide range of genome rearrangements, as shown in Figure 2.
+
+For the particular case that $\Pi$ and $\Gamma$ have the same genes (i.e., $g(\Pi) = g(\Gamma) = \mathcal{G}$), the {\em DCJ distance} between $\Pi$ and $\Gamma$, written $d_{\mathrm{DCJ}}(\Pi, \Gamma)$, is the minimum number of DCJs required to transform $\Pi$ into $\Gamma$  One can easily verify that $d_{\mathrm{DCJ}}$ forms a metric on the set of all genomes having gene set $\mathcal{G}$.  A closed formula for DCJ distance was derived in \cite{bergeron} and translated into breakpoint graph notation in \cite{tannier}:
+
+\begin{equation}
+d_{\mathrm{DCJ}}(\Pi, \Gamma) = N - c(\Pi, \Gamma) - \frac{p_{\mathrm{even}}(\Pi, \Gamma)}{2}
+\label{Equation: DCJ Closed Form}
+\end{equation}
+
+\noindent Here, $c(\Pi, \Gamma)$ and $p_{\mathrm{even}}(\Pi, \Gamma)$ denote the number of cycles and even-length paths in $\mathrm{B}(\Pi, \Gamma)$, respectively.
+
+For the more general case that $\Pi$ and $\Gamma$ do not share the same genes, a {\em deletion} of a chromosomal interval of $\Pi$ replaces adjacencies $\{v, w\}$ and $\{x, y\}$ (contained in the order $(v, w, x, y)$ along a chromosome of $\Pi$) with the adjacency $\{v, y\}$ and removes the path connecting $w$ to $x$.  We also allow deletions of entire chromosomes; however, we must stipulate (following the lead of the authors in \cite{braga2010}) that every vertex removed from $\Pi$ must belong to $\mathcal{V} - V(\Gamma)$.$^\textrm{b}$ The {\em insertion} of a chromosome or chromosomal interval into $\Pi$ to obtain $\Pi'$ is defined as the inverse of a corresponding deletion from $\Pi'$ that yields $\Pi$.  Note that a consequence of this definition is that we may not insert a gene unless it is contained in $\mathcal{G}$. Insertions and deletions are collectively called {\em indels}; thus, we define the {\em DCJ-indel distance} between $\Pi$ and $\Gamma$, written $d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi, \Gamma)$, as the minimum number of DCJs and indels required to transform $\Pi$ into $\Gamma$.
+
+Because insertions and deletions are inverse operations, it follows that $d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi, \Gamma) = d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Gamma, \Pi)$.  However, although $d_{\mathrm{DCJ}}^{\mathrm{ind}}$ is symmetric, unlike $d_{\mathrm{DCJ}}$ it does not form a metric, as the triangle inequality does not hold; see \cite{stoye_triangle} for a more complete discussion.
+
+\subsection*{DCJ-Indel Sorting} \label{Section: Computing DCJ-Indel Distance}
+\subsubsection*{Handling Circular Singletons}
+
+We begin our discussion of DCJ-indel sorting by defining a {\em circular singleton} of $\Pi$ (adapted from\cite{braga2010}) as a chromosome $C$ such that $V(C) \cap V(\Gamma) = \emptyset$.  Note that $C$ is defined with respect to $\Gamma$ as well as $\Pi$.  Ideally, we could delete (insert) all circular singletons of $\Pi$ and $\Gamma$ immediately to simplify the problem of DCJ-indel sorting; fortunately, this is indeed the case, as shown by the following two results.
+
+\begin{proposition}
+If $\Pi'$ is formed by removing a circular singleton $C$ from $\Pi$, then $d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi', \Gamma) = d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi, \Gamma) - 1$.  Furthermore, when transforming $\Pi$ into $\Gamma$ via a minimum collection of DCJs and indels, no gene belonging to a circular singleton of $\Pi$ can ever appear in the same chromosome as a gene of $\Gamma$.
+\label{Proposition: Circular Singleton}
+\end{proposition}
+
+\begin{proof}
+Any collection of $k$ DCJs and indels transforming $\Pi'$ into $\Gamma$ can be supplemented by the deletion of $C$ to yield $k+1$ DCJs and indels transforming $\Pi$ into $\Gamma$; thus, $d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi', \Gamma) \geq d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi, \Gamma) - 1$.
+
+To obtain the reverse bound, let us view a transformation $\mathbb{T}$ of $\Pi$ into $\Gamma$ as a sequence $(\Pi_0, \Pi_1, \ldots, \Pi_n)$ ($n \geq 1$), where $\Pi_0 = \Pi$, $\Pi_n = \Gamma$, and $\Pi_{i+1}$ is obtained from $\Pi_i$ as the result of a single DCJ or indel. Consider a sequence $(\Pi'_0, \Pi'_1, \ldots, \Pi'_n)$, where $\Pi'_i$ is constructed from $\Pi_i$ by removing the subgraph of $\Pi_i$ induced by the vertices of $C$ under the stipulation that whenever we remove a path $P$ connecting $v$ to $w$, we replace adjacencies $\{v, x\}$ and $\{w, y\}$ in $\Pi$ with $\{x, y\}$ in $\Pi'_i$.  It is easy to see that $\Pi'_0 = \Pi'$, $\Pi'_n = \Gamma$, and for every $i$ in range, either $\Pi'_{i+1}$ is the result of a DCJ or indel applied to $\Pi'_i$ or $\Pi'_{i+1} = \Pi'_i$; thus, $(\Pi'_0, \Pi'_1, \ldots, \Pi'_n)$ encodes a transformation of $\Pi'$ into $\Gamma$ using at most $n$ DCJs and indels.  Furthermore, one can verify that $\Pi'_{i+1} = \Pi'_i$ only when an adjacency of $C$ is used by a DCJ in $\mathbb{T}$ changing $\Pi_i$ to $\Pi_{i+1}$ or when $\Pi_{i+1}$ is produced from $\Pi_i$ by a deletion of vertices that all belong to $C$.  At least one such operation must always occur in $\mathbb{T}$; hence, $d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi', \Gamma) \leq d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi, \Gamma) - 1$.
+
+The proposition's second conclusion follows from the fact that if for some $j$ ($1 \leq j \leq n-1$), a chromosome of $\Pi_j$ contains a gene $g_1$ of $\Pi$ and a gene $g_2$ of $C$, then one DCJ was required to combine $g_1$ and $g_2$ into the same chromosome, and another will be needed to separate them, yielding two distinct values of $i$ for which $\Pi'_{i+1} = \Pi'_i$.  From the first part of the proof, we may conclude that $d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi, \Gamma) < n$. 
+
+\end{proof}
+
+Letting $\mathrm{sing}(\Pi, \Gamma)$ denote the total number of circular singletons of $\Pi$ and $\Gamma$, we have an immediate corollary.
+
+\begin{corollary}
+The DCJ-indel distance is given by the following:
+\begin{equation}
+d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi, \Gamma) = \mathrm{sing}(\Pi, \Gamma) + d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi^0, \Gamma^0)
+\end{equation}
+where $\Pi^0$ ($\Gamma^0$) is formed by removing all circular singletons from $\Pi$ ($\Gamma$).
+\label{Corollary: Eliminating Circular Singletons}
+\end{corollary}
+
+\noindent With respect to DCJ-indel sorting, Corollary \ref{Corollary: Eliminating Circular Singletons} allows us to assume without loss of generality that $\Pi$ and $\Gamma$ do not contain any circular singletons.
+
+We next make an observation taken from\cite{ma}, which is that the deletion of a chromosomal interval of $\Pi$ connecting $w$ to $x$ may be viewed as a DCJ: $\{v, w\}, \{x, y\} \rightarrow \{v, y\}, \{w, x\}$; this operation produces a circular chromosome containing $w$ and $x$ that is scheduled for removal, including the case that $v$ or $y$ equals $\emptyset$ (the deletion of an entire linear chromosome is handled by $u = x = \emptyset$); see Figure 3.  Because insertions are the inverses of deletions, we would like to conclude that indels may be placed in a one-to-one correspondence with the removal of circular chromosomes. Ironically, the apparent exception to this proposed rule is the deletion of an entire circular chromosome.
+
+Yet if a deleted circular chromosome $C$ is not produced as the result of a DCJ, then $C$ must be a circular singleton of $\Pi$ in order to be deleted. Otherwise, $C$ has been produced as the result of a DCJ applied to a chromosomal interval; by the method we just described, we can encode the deletion in this DCJ unless it also creates another circular chromosome $C'$ that is scheduled for removal.  However, this sequence of operations cannot arise in a minimum collection of DCJs and indels transforming $\Pi$ into $\Gamma$, as we could simply delete the original chromosome(s) from which $C$ and $C'$ were produced by the DCJ in question, thus using at most two operations instead of three.
+
+\subsubsection*{Toward a New Model of Indels}
+
+We will follow the observation made in\cite{ma} that the actual removal of deleted chromosomes can occur as a final step in the transformation of $\Pi$ into $\Gamma$.  As a result, we may view the transformation of $\Pi$ into $\Gamma$ as composed of three steps: inserting chromosomes into $\Pi$ to yield a new genome $\Pi'$ with $g(\Pi') = \mathcal{G}$; applying a sequence of DCJs to produce a genome $\Gamma'$ having the same genes as $\Pi'$; and finally, deleting chromosomes from $\Gamma'$ to produce $\Gamma$.  Note that we can equivalently view the first step as the deletion of chromosomes from $\Pi'$ to obtain $\Pi$.  Combining this observation with our correspondence between indels and circular chromosomes above, we may introduce the following framework.
+
+Define a {\em completion} of $\Pi$ as a genome $\Pi'$ having $g(\Pi') = \mathcal{G}$ and for which $a(\Pi')$ is composed of $a(\Pi)$ together with a perfect matching on $V(\Pi') - V(\Pi)$.  We call the adjacencies of $a(\Pi') - a(\Pi)$ {\em new}.  Note that the chromosomes of $\Pi$ embed as chromosomes of $\Pi'$ and that the components of $\Pi' - \Pi$ form cycles because the new adjacencies of $\Pi'$ induce a perfect matching on $V(\Pi') - V(\Pi)$; we may now without ambiguity call these circular chromosomes of $\Pi'$ the {\em indels} of $\Pi'$.   A {\em completion} of a pair of genomes $(\Pi, \Gamma)$ is simply a pair $(\Pi', \Gamma')$ for which $\Pi'$ and $\Gamma'$ are completions of $\Pi$ and $\Gamma$, respectively.  The above discussion implies that for any minimum cost transformation of $\Pi$ into $\Gamma$, the indels of $\Pi'$ correspond bijectively to DCJ operations, so that we will amortize each unit indel cost by that of a DCJ operation.  This amortization yields the following equation for DCJ-indel distance:
+
+\begin{equation}
+d^{\mathrm{ind}}_{\mathrm{DCJ}}(\Pi, \Gamma) = \min_{(\Pi', \Gamma')}\left\{{{ d_{\mathrm{DCJ}}(\Pi', \Gamma')}}\right\}
+\label{Equation: DCJ-Indel Minimum}
+\end{equation}
+
+\noindent where the minimum is taken over all completions of $(\Pi, \Gamma)$.  A completion $(\Pi^*, \Gamma^*)$ is {\em optimal} if it attains the minimum in (\ref{Equation: DCJ-Indel Minimum}).  Applying the closed form equation for the DCJ distance  in (\ref{Equation: DCJ Closed Form}) to immediately produces the following result.
+
+\begin{theorem}
+The DCJ-indel distance is given by the following equation:
+\begin{equation}
+d^{\mathrm{ind}}_{\mathrm{DCJ}}(\Pi, \Gamma) = N - \max_{(\Pi', \Gamma')}{\left\{c(\Pi', \Gamma') + \frac{p_{\mathrm{even}}(\Pi', \Gamma')}{2}\right\}}
+\label{Equation: DCJ-Indel Maximum I}
+\end{equation}
+where the maximum is taken over all completions of $(\Pi, \Gamma)$. 
+\label{Theorem: DCJ-Indel Maximum}
+\end{theorem}
+
+\subsubsection*{Constructing an Optimal Completion}
+In light of Theorem \ref{Theorem: DCJ-Indel Maximum}, we have reduced DCJ-indel sorting to the problem of constructing indels intelligently to maximize a weighted sum of breakpoint graph components.  Once we have produced an optimal completion $(\Pi^*, \Gamma^*)$, we can simply invoke the $O(N)$-time sorting algorithm described in \cite{bergeron} to transform $\Pi^*$ into $\Gamma^*$ via a minimum collection of DCJs.
+
+Our goal is to construct $(\Pi^*, \Gamma^*)$ by direct analysis of $\mathrm{B}(\Pi, \Gamma)$.  Because $\Pi$ and $\Gamma$ do not necessarily share the same genes, $\mathrm{B}(\Pi, \Gamma)$ may contain path endpoints that are not telomeres.  Accordingly, we define a vertex $v$ to be ${\mathit \pi}${\em -open} (${\mathit \gamma}${\em-open}) if $v \notin \Pi$ ($v \notin \Gamma$).  In other words, $v$ must be matched to some other $\pi$-open vertex when constructing the indels of $\Pi^*$.$^\textrm{c}$ The paths of $\mathrm{B}(\Pi, \Gamma)$ are therefore classified according to their endpoints: a {\em ${\mathit \pi}$-path} ({\em ${\mathit \gamma}$-path}) ends in one $\pi$-open ($\gamma$-open) vertex and one telomere (of either $\Pi$ or $\Gamma$); a ${\mathit \{\pi, \gamma\}}${\em-path} ends in a $\pi$-open vertex and a $\gamma$-open vertex (such a path must have even length at least $2$); a ${\mathit \{\pi, \pi\}}${\em-path} (${\mathit \{\gamma, \gamma\}}${\em-path}) ends in two $\pi$-open ($\gamma$-open) vertices and must therefore have odd length.  We should also provide statistics for counting these different components.  Define $p^{\pi, \gamma}$ as the number of $\{\pi, \gamma\}$-paths in $\mathrm{B}(\Pi, \Gamma)$;  $p^{\pi}_{\mathrm{even}}$ as the number of even-length $\pi$-paths in $\mathrm{B}(\Pi, \Gamma)$; and $p^{0}_{\mathrm{even}}$ as the number of even-length paths in $\mathrm{B}(\Pi, \Gamma)$ containing no open vertices (i.e., ending in two telomeres).  Similar statistics counting odd-length paths can be defined analogously.  We have dropped the genomes $\{\Pi, \Gamma\}$ from these statistics for the sake of simplicity; all component statistics will be taken with respect to $\mathrm{B}(\Pi, \Gamma)$ unless otherwise noted.
+
+We first present a proposition regarding the parity of the paths of $\mathrm{B}(\Pi, \Gamma)$.
+
+\begin{proposition}
+The component statistics of $\mathrm{B}(\Pi, \Gamma)$ satisfy the following condition:
+\begin{align}
+p^{\pi, \gamma} \equiv \left| p^{\pi}_{\mathrm{odd}} - p^{\pi}_{\mathrm{even}} \right| \hspace{2.9 pt}  \equiv \left| p^{\gamma}_{\mathrm{odd}} - p^{\gamma}_{\mathrm{even}} \right|  \mod 2 \label{Equation: Modulo 1}
+\end{align}
+\label{Proposition: Parity Proposition}
+\end{proposition}
+
+\begin{proof}
+The total number of $\pi$-open vertices is equal to $V(\Pi') - V(\Pi)$ and must therefore be even.  Of course, the same is the case for $\gamma$-open vertices, and counting $\pi$-open and $\gamma$-open vertices over the connected components of $\mathrm{B}(\Pi, \Gamma)$ thus produces the following equivalences:
+\begin{align}
+p^{\pi}_{\mathrm{odd}} + p^{\pi}_{\mathrm{even}} +  p^{\pi, \gamma} & \equiv 0 \mod 2 \label{Equation: Modulo 2}\\
+p^{\gamma}_{\mathrm{odd}} + p^{\gamma}_{\mathrm{even}} + p^{\pi, \gamma} & \equiv 0 \mod 2 \label{Equation: Modulo 3}
+\end{align}
+Adding $p^{\pi, \gamma}$ to both sides of (\ref{Equation: Modulo 2}) and (\ref{Equation: Modulo 3}) gives the following:
+
+\begin{equation}
+p^{\pi, \gamma} \equiv \left(p^{\pi}_{\mathrm{odd}} + p^{\pi}_{\mathrm{even}}\right) \hspace{0 pt} \equiv  \left(p^{\gamma}_{\mathrm{odd}} + p^{\gamma}_{\mathrm{even}}\right) \hspace{-3 pt} \mod 2
+\label{Equation: Modulo 4}
+\end{equation}
+
+\noindent The equivalence of (\ref{Equation: Modulo 1}) and (\ref{Equation: Modulo 4}) is an arithmetical fact. 
+\end{proof}
+
+We next establish two necessary conditions on optimal completions by culling the set of possible adjacencies of any such completion.  Our general strategy is to consider the addition of a new adjacency $\{v, w\}$ to a completion $\Pi'$ as {\em linking} the component(s) of $\mathrm{B}(\Pi, \Gamma)$ whose endpoints are the ($\pi$-open) vertices $v$ and $w$.  Our first result states that we must always link the endpoints of any $\{\pi, \pi\}$-path to each other.
+
+\begin{lemma}
+If $(\Pi^*, \Gamma^*)$ is an optimal completion of $(\Pi, \Gamma)$, then every $\{\pi, \pi\}$-path ($\{\gamma, \gamma\}$-path) of length $2k-1$ in $\mathrm{B}(\Pi, \Gamma)$ ($k \geq 1$) embeds into a cycle of length $2k$ in $\mathrm{B}(\Pi^*, \Gamma^*)$.
+\label{Lemma: Odd Paths}
+\end{lemma}
+
+\begin{proof}
+Let $P$ be a path of length $2k-1$ connecting $\pi$-open vertices $v$ and $w$ in $\mathrm{B}(\Pi, \Gamma)$. Our claim is that we must link $v$ and $w$ in $\mathrm{B}(\Pi^{*}, \Gamma^{*})$.  Suppose for the sake of contradiction that we have a completion $(\Pi', \Gamma')$ such that $P$ does not embed into a cycle of length $2k$ in $\mathrm{B}(\Pi', \Gamma')$; in this case, we must have adjacencies $\{v, x\}$ and $\{w, y\}$ in $a(\Pi')$, where all four vertices are distinct.
+
+Consider the completion $\Pi''$ that is identical to $\Pi'$ except that $\{v, x\}$ and $\{w, y\}$ are replaced by $\{v, w\}$ and $\{x, y\}$.  In $\mathrm{B}(\Pi'', \Gamma')$, we have closed $P$ into a cycle of length $2k$, and at the same time, we have changed neither the parity nor the linearity/circularity of the  component containing $x$ and $y$.  Because we have increased the number of breakpoint graph cycles by 1 without changing the total number of paths, it follows from (\ref{Equation: DCJ Closed Form}) that $d_{\mathrm{DCJ}}(\Pi'', \Gamma') = d_{\mathrm{DCJ}}(\Pi', \Gamma') - 1$, and so $(\Pi', \Gamma')$ cannot be optimal. 
+\end{proof}
+
+Having dealt with $\{\pi, \pi\}$- and $\{\gamma, \gamma\}$-paths of $\mathrm{B}(\Pi, \Gamma)$, any remaining component of $\mathrm{B}(\Pi^*, \Gamma^*)$ must be either a $j$-{\em bracelet}, which is a cycle linking $j$ $\{\pi, \gamma\}$-paths (where $j \geq 2$ and $j$ is even), or a $k${\em -chain}, in which two $\pi$-paths or two $\gamma$-paths are linked via an intermediate number of $\{\pi, \gamma\}$-paths to form a path containing $k$ components from $\mathrm{B}(\Pi, \Gamma)$ ($k \geq 2$).  Note that when $k$ is even, a $k$-chain $C$ must contain either two $\pi$-paths or two $\gamma$-paths, and when $k$ is odd, $C$ must contain one $\pi$-path and one $\gamma$-path.
+
+For the sake of simplicity, we will represent a $j$-bracelet by $(P_1:P_2:\cdots:P_j)$ and a $k$-chain by $[P_1:P_2:\cdots:P_k]$, where every $P_i$ is linked to $P_{i+1}$, and in the case of a $j$-bracelet, $P_1$ is linked to $P_j$.  Because we wish to maximize a weighted sum of breakpoint graph components, we might guess that we should look for many short bracelets and chains.  Indeed, the length of a bracelet or chain in $\mathrm{B}(\Pi^*, \Gamma^*)$ is heavily restricted by the following lemma.
+
+\begin{lemma}
+If $(\Pi^*, \Gamma^*)$ is an optimal completion, then a component $C^*$ of\\$\mathrm{B}(\Pi^*, \Gamma^*)$ can only contain two or more $\{\pi, \gamma\}$-paths if $C^*$ is a $2$-bracelet.
+\label{Lemma: Even Paths Cycles}
+\end{lemma}
+
+\begin{proof}
+Again, say for the sake of contradiction that we have an optimal completion $(\Pi', \Gamma')$ for which a component $C'$ of $\mathrm{B}(\Pi', \Gamma')$ contains two or more $\{\pi, \gamma\}$-paths.  If $C'$ is not a $2$-bracelet, then it must contain $\{\pi, \gamma\}$-paths $P_1$ and $P_2$ that are linked by precisely one new adjacency.  Say that $P_1$ joins $\pi$-open vertex $v$ to $\gamma$-open vertex $w$ and that $P_2$ joins $\pi$-open vertex $x$ to $\gamma$-open vertex $y$.  To meet the assumption that $P_1$ and $P_2$ are linked by precisely one adjacency, suppose that $\{v, x\} \in a(\Pi')$ but $\{w, y\} \notin a(\Gamma')$, where instead $\{w, w'\}$ and $\{y, y'\}$ are in $a(\Gamma')$.  Replacing these two adjacencies with $\{w, y\}$ and $\{w', y'\}$ defines a new completion $\Gamma''$ for which $\mathrm{B}(\Pi', \Gamma'')$ contains $(P_1:P_2)$. Viewed as an operation on $\mathrm{B}(\Pi', \Gamma')$ to yield $\mathrm{B}(\Pi', \Gamma'')$, we have two cases.
+
+First, if $C'$ was a bracelet, then we have formed two new bracelets from $C'$, one of which is $(P_1:P_2)$.  Otherwise, $C'$ was a chain, in which case we have formed a chain (of the same parity) in addition to $(P_1:P_2)$.  In either case, we may check that $d_{\mathrm{DCJ}}(\Pi', \Gamma'') < d_{\mathrm{DCJ}}(\Pi', \Gamma')$, and so $(\Pi', \Gamma')$ cannot be optimal. 
+\end{proof}
+
+Following Lemma \ref{Lemma: Even Paths Cycles}, we may only have $2$-bracelets, $2$-chains, and $3$-chains in $\mathrm{B}(\Pi^*, \Gamma^*)$.  After a simple result about the parity of $2$-chain components, we will be ready to state our main result on DCJ-indel sorting.
+
+\begin{proposition}
+The breakpoint graph of an optimal completion cannot have one $2$-chain joining two odd $\pi$-paths and another $2$-chain joining two even $\pi$-paths.  The same holds for $\gamma$-paths.
+\label{Proposition: Odd-Even 2-Chains}
+\end{proposition}
+
+\begin{proof}
+Once again, proceed by contradiction and assume that  $(\Pi', \Gamma')$ is an optimal completion with such $2$-chains $[P_1:P_2]$ and $[P_3:P_4]$. Replacing these $2$-chains with $[P_1:P_3]$ and $[P_2:P_4]$ replaces two odd paths in $\mathrm{B}(\Pi'', \Gamma'')$ with two even paths; hence, $(\Pi', \Gamma')$ cannot be optimal. 
+\end{proof}
+
+\begin{theorem}
+Algorithm \ref{Algorithm: Sorting}, given below, defines an $O(N)$ time algorithm for DCJ-indel sorting.  For pairs $\{\Pi, \Gamma\}$ having $\mathrm{sing}(\Pi, \Gamma) = 0$, the DCJ-indel distance is given by the following equation:
+\begin{multline}
+d_{\mathrm{DCJ}}^{\mathrm{ind}}(\Pi, \Gamma) = N - \left[\left(c + p^{\pi, \pi} + p^{\gamma, \gamma} + \left\lfloor \frac{p^{\pi, \gamma}}{2} \right\rfloor \right) + \frac{1}{2} \left(p^0_{\mathrm{even}} + \min{\left\{p^{\pi}_{\mathrm{odd}}, p^{\pi}_{\mathrm{even}}\right\}} \right. \right. \\
++ \left. \left. \min{\left\{p^{\gamma}_{\mathrm{odd}}, p^{\gamma}_{\mathrm{even}}\right\}} + \delta\right)\right]
+\label{Equation: DCJ-Indel Distance}
+\end{multline}
+Here, $\delta = 1$ only if $p^{\pi, \gamma}$ is odd and either $p^{\pi}_{\mathrm{odd}} > p^{\pi}_{\mathrm{even}}, p^{\gamma}_{\mathrm{odd}} > p^{\gamma}_{\mathrm{even}}$ or \\$p^{\pi}_{\mathrm{odd}} < p^{\pi}_{\mathrm{even}}, p^{\gamma}_{\mathrm{odd}} < p^{\gamma}_{\mathrm{even}}$; otherwise, $\delta = 0$.
+\label{Theorem: Main Theorem}
+\end{theorem}
+
+\begin{proof}
+
+We aim to construct an optimal completion $(\Pi^*, \Gamma^*)$ having
+ \begin{align}
+ c(\Pi^*, \Gamma^*) &= c + p^{\pi, \pi} + p^{\gamma, \gamma} + \left\lfloor \frac{p^{\pi, \gamma}}{2} \right\rfloor \\
+ p_{\mathrm{even}}(\Pi^*, \Gamma^*) &= p^0_{\mathrm{even}} + \min{\left\{p^{\pi}_{\mathrm{odd}}, p^{\pi}_{\mathrm{even}}\right\}} + \min{\left\{p^{\gamma}_{\mathrm{odd}}, p^{\gamma}_{\mathrm{even}}\right\}} + \delta
+ \end{align}
+
+\noindent First, we count the cycles of $\mathrm{B}(\Pi^*, \Gamma^*)$.  By Lemma \ref{Lemma: Odd Paths}, every $\{\pi, \pi\}$-path or $\{\gamma, \gamma\}$-path of $\mathrm{B}(\Pi, \Gamma)$ must be closed into a cycle by adding a single new adjacency (Step 1 of Algorithm \ref{Algorithm: Sorting}).  We now claim that there exists an optimal completion containing $\left\lfloor \frac{p^{\pi, \gamma}}{2} \right\rfloor$ $2$-bracelets.  Note that we may always replace $3$-chains $[P_1:P_2:P_3]$ and $[P_4:P_5:P_6]$ (where $P_1$ and $P_4$ are $\pi$-paths) with $[P_1:P_4]$, $(P_2:P_5)$, and $[P_3:P_6]$, without increasing the DCJ distance of the associated completion because we have obtained a cycle from two paths.  This argument implies Step 2 of Algorithm \ref{Algorithm: Sorting} and produces the value of $c(\Pi^*, \Gamma^*)$ stated above.
+
+As for the even paths of $\textrm{B}(\Pi^*, \Gamma^*)$, let us operate under the assumption that $p^{\pi, \gamma}$ is odd.  Then after forming a maximal collection of $2$-bracelets, we will be left with one additional $\{\pi, \gamma\}$-path $P$.  We claim that $(\Pi^*, \Gamma^*)$ will be optimal if we link as many $\pi$-paths ($\gamma$-paths) of opposite parity as possible.  On the one hand, Proposition \ref{Proposition: Odd-Even 2-Chains} states that we cannot have $2$-chains $[P_1:P_2]$ and $[P_3:P_4]$, where $P_1$ and $P_2$ are even $\pi$-paths and $P_3$ and $P_4$ are odd $\pi$-paths.  On the other hand, say that we have a $2$-chain $[P_1:P_2]$ and a $3$-chain $[P_3:P:P_4]$, where without loss of generality we assume that $P_1$ and $P_2$ are odd $\pi$-paths, $P_3$ is an even $\pi$-path, and $P_4$ is a $\gamma$-path.  Replacing these chains with the chains $[P_1:P_3]$ and $[P_2:P:P_4]$ does not change the number of paths of even length in $\mathrm{B}(\Pi^*, \Gamma^*)$, implying Step 3 of Algorithm \ref{Algorithm: Sorting}.
+
+Thus, all remaining $\pi$-paths must have the same parity, as must all the $\gamma$-paths; thus, we may choose any $\pi$-path and $\gamma$-path to link to $P$ (Step 4 of Algorithm \ref{Algorithm: Sorting}) and form a 3-chain.  The length of this 3-chain may be even ($\delta = 1$) or odd ($\delta = 0$) depending on whether the length of its $\pi$-path and $\gamma$-path have equal parity or not.  All remaining paths must therefore be $2$-chains linking pairs of $\pi$-paths or pairs of $\gamma$-paths (Step 5 of Algorithm \ref{Algorithm: Sorting}).
+
+If instead $p^{\pi, \gamma}$ is even, then $\delta = 0$, and the argument for constructing an optimal completion proceeds similarly, except that no $\{\pi, \gamma\}$-paths will remain after forming a maximal collection of $2$-bracelets, eliminating the need for Step 4. 
+
+\end{proof}
+
+\begin{algorithm} Given genomes $(\Pi, \Gamma)$, the following algorithm constructs an optimal completion $(\Pi^*, \Gamma^*)$ in $O(N)$ time.
+\begin{enumerate}
+\setcounter{enumi}{-1}
+\item Remove all circular singletons from $\Pi$ and $\Gamma$.
+\item Close every $\{\pi, \pi\}$-path ($\{\gamma, \gamma\}$-path) into a cycle by adding a single new adjacency to $\Pi^*$ ($\Gamma^*$).
+\item Form a maximum set of $2$-bracelets.
+\item Form a maximum set of even $2$-chains by linking pairs of $\pi$-paths ($\gamma$-paths) having opposite parity.
+\item If $p^{\pi, \gamma}$ is odd, then link the remaining $\{\pi, \gamma\}$-path with any remaining $\pi$-path and $\gamma$-path to form a 3-chain.
+\item Arbitrarily link pairs of remaining $\pi$-paths, all of which have the same parity, to form 2-chains.  Do the same for remaining $\gamma$-paths.
+\end{enumerate}
+\label{Algorithm: Sorting}
+\end{algorithm}
+
+\subsection*{The Solution Space of DCJ-Indel Sorting} \label{Section: Solution Space}
+
+The problem of DCJ sorting is well understood, its solution space having been described in \cite{braga2}.  Thus, by Theorem \ref{Theorem: DCJ-Indel Maximum}, to identify the solution space of DCJ-indel sorting (an open problem), we simply need to enumerate the construction of indels of an optimal completion.  We mentioned this enumeration in \cite{compeau}, but here we will explore the details of the calculation.
+
+\subsubsection*{Handling Circular Singletons} \label{Subsection: Circular Singletons}
+
+By Proposition \ref{Proposition: Circular Singleton}, we may consider the circular singletons of $\Pi$ and $\Gamma$ independently of other chromosomes; for that matter, because insertions and deletions are defined symmetrically, we may assume that $\Pi$ contains $k$ chromosomes and that $\Gamma$ is the empty genome.  Then by Corollary \ref{Corollary: Eliminating Circular Singletons} and the trivial fact that any DCJ applied to $\Pi$ changes the total number of chromosomes of $\Pi$ by at most $1$ (see \cite{yancopoulos}), we may obtain $\Gamma$ from $\Pi$ in $k$ steps if and only if we perform $j$ successive DCJs ($0 \leq j < k$), each of which fuses two circular chromosomes into one, followed by applying $k - j$ chromosome deletions.
+
+Assuming that $k$ is relatively small, the enumeration of all such transformations of $\Pi$ into $\Gamma$ poses a tedious but straightforward task, as a fusion of two circular chromosomes corresponds to a DCJ using two adjacencies from different chromosomes.
+
+\subsubsection*{Genomes Lacking Circular Singletons} \label{Subsection: No Circular Singletons}
+
+Having handled circular singletons, we may assume that $\mathrm{sing}(\Pi, \Gamma) = 0$.  Fortunately, the lemmas presented before Theorem \ref{Theorem: Main Theorem} have greatly reduced the collection of possible optimal completions, which we now continue to pare down.
+
+\begin{proposition}
+Every $\pi$-path ($\gamma$-path) embedding into a $3$-chain of an optimal completion must have the same parity.
+\label{Proposition: Opposite Parity Paths}
+\end{proposition}
+
+\begin{proof}
+Say for the sake of contradiction that we have an optimal completion $(\Pi', \Gamma')$ such that $\mathrm{B}(\Pi', \Gamma')$ contains $3$-chains $[P_1:P_2:P_3]$ and $[P_4:P_5:P_6]$, where $P_1$ and $P_4$ are $\pi$-paths of opposite parity.  Consider the completion $(\Pi'', \Gamma'')$, which is defined by rejoining adjacencies of $(\Pi', \Gamma')$ to form $[P_1:P_4]$, $(P_2:P_5)$, and $[P_3:P_6]$ in $\mathrm{B}(\Pi'', \Gamma'')$. The $2$-chain $[P_1:P_4]$ must have even length, and $(P_2:P_5)$ is a cycle; thus, $d_{\mathrm{DCJ}}(\Pi'', \Gamma'') < d_{\mathrm{DCJ}}(\Pi', \Gamma')$, and so $(\Pi', \Gamma')$ cannot be optimal. 
+\end{proof}
+
+\begin{proposition}
+If $p^{\pi, \gamma}$ is even, then the breakpoint graph of an optimal completion must contain a maximum set of even-length $2$-chains.
+\label{Proposition: Maximal 2-Chains}
+\end{proposition}
+
+\begin{proof}
+We proceed by contradiction.  Say that $(\Pi', \Gamma')$ is an optimal completion for which an odd $\pi$-path $P_1$ and an even $\pi$-path $P_2$ are contained in different components of $\mathrm{B}(\Pi', \Gamma')$, neither of which is an even $2$-chain.  By Propositions \ref{Proposition: Odd-Even 2-Chains} and  \ref{Proposition: Opposite Parity Paths}, we may assume that  $P_1$ and $P_2$ embed into an odd-length $2$-chain $[P_1:P_5]$ and a $3$-chain $[P_2:P_3:P_4]$ . Because $p^{\pi, \gamma}$ is even,  we must have at least one additional $3$-chain $[P_6:P_7:P_8]$, where (again by Proposition \ref{Proposition: Opposite Parity Paths}) $P_6$ is an even-length $\pi$-path, and the $\gamma$-paths $P_4$ and $P_8$ have the same parity.  With these assumptions in hand, we may rejoin adjacencies to form the four components $[P_1:P_2]$ (even), $[P_5:P_6]$ (even), $(P_3:P_7)$, and $[P_4:P_8]$ (odd), producing a cycle and two even $2$-chains from our original three paths.  Hence, by (\ref{Equation: DCJ-Indel Maximum I}), $(\Pi', \Gamma')$ cannot be optimal. 
+\end{proof}
+
+We are now ready to fully describe the collection of optimal completions when $p^{\pi, \gamma}$ is even.  To construct an optimal completion, after closing each $\{\pi, \pi\}$-path and $\{\gamma, \gamma\}$-path, which can be done uniquely, we must form a maximum collection of even $2$-chains by Proposition \ref{Proposition: Maximal 2-Chains}.  Recall that our aim is to maximize the statistic $c(\Pi^*, \Gamma^*) + \frac{p_{\mathrm{even}}(\Pi^*, \Gamma^*)}{2}$, and consider the following two subcases.
+
+{\bf Case 1}: $p^{\pi, \gamma}$ is even, $p^\pi_{\mathrm{odd}} \leq p^\pi_{\mathrm{even}}$, and $p^\gamma_{\mathrm{odd}} \geq p^\gamma_{\mathrm{even}}$.  First, a maximal collection of even-length $2$-chains will total $p^\pi_{\mathrm{odd}} + p^\gamma_{\mathrm{even}}$ components, which requires simply choosing $p^\pi_{\mathrm{odd}}$ even-length $\pi$-paths, then matching them to odd-length $\pi$-paths.  This can be achieved in $A_1$ ways, where
+\begin{equation}
+A_1 = \binom{p^\pi_{\mathrm{even}}}{p^\pi_{\mathrm{odd}}} \cdot \left(p^\pi_{\mathrm{odd}}\right)! = \mathrm{P}\left(p^\pi_{\mathrm{even}}, p^\pi_{\mathrm{odd}}\right)
+\end{equation}
+Next, we follow the same method for forming even-length $2$-chains by linking $\gamma$-paths of opposite parity, yielding $B_1$ total matchings:
+\begin{equation}
+B_1 = \mathrm{P}\left(p^\gamma_{\mathrm{odd}}, p^\gamma_{\mathrm{even}}\right)
+\end{equation}
+Here, we use $\mathrm{P}(n, k)$ to denote the partial permutation statistic: $\mathrm{P}(n, k) = \frac{n!}{(n-k)!}$.  We will be left with $p^\pi_{\mathrm{even}} - p^\pi_{\mathrm{odd}}$ even $\pi$-paths and $p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}}$ odd $\gamma$-paths.  It is impossible to create any more even-length paths in $\textrm{B}(\Pi^*, \Gamma^*)$, and so we must form a maximum collection of $\frac{p^{\pi, \gamma}}{2}$ $2$-bracelets from the $\{\pi, \gamma\}$-paths:
+\begin{equation}
+C_1 = \left(p^{\pi, \gamma}_{\mathrm{even}} - 1\right)!! = \left(p^{\pi, \gamma}_{\mathrm{even}} - 1\right)\left(p^{\pi, \gamma}_{\mathrm{even}} - 3\right) \cdots (5)(3)(1)
+\end{equation}
+Note the definition of double factorial.  Finally, we link arbitrary remaining $\pi$-paths to each other and arbitrary remaining $\gamma$-paths to each other:
+\begin{equation}
+D_1 = \left(p^\pi_{\mathrm{even}} - p^\pi_{\mathrm{odd}} - 1\right)!! \cdot \left(p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}} - 1\right)!!
+\end{equation}
+By the independence of these four procedures, the total number of optimal completions is simply given by the product $A_1 \cdot B_1 \cdot C_1 \cdot D_1$.\bigskip
+
+{\bf Case 2}: $p^{\pi, \gamma}$ is even, $p^\pi_{\mathrm{odd}} > p^\pi_{\mathrm{even}}$, and $p^\gamma_{\mathrm{odd}} > p^\gamma_{\mathrm{even}}$. In this case, we first form a maximum set of $2$-chains:
+\begin{equation}
+A_2 = \mathrm{P}\left(p^\pi_{\mathrm{odd}}, p^\pi_{\mathrm{even}}\right) \cdot \mathrm{P}\left(p^\gamma_{\mathrm{odd}}, p^\gamma_{\mathrm{even}}\right)
+\end{equation}
+We then have $p^\pi_{\mathrm{odd}} - p^\pi_{\mathrm{even}}$ odd-length $\pi$-paths and $p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}}$ odd-length $\gamma$-paths remaining.   Assume without loss of generality that $p^\pi_{\mathrm{odd}} - p^\pi_{\mathrm{even}} \geq p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}}$, and set $m = \min{\{p^{\pi, \gamma}, p^\gamma_{\mathrm{odd}} - p^{\gamma}_{\mathrm{even}}\}}$.  We may attain the formula in (\ref{Equation: DCJ-Indel Distance}) if and only if we form $2j$ even-length $3$-chains for some integer $j$ satisfying $0 \leq j \leq \frac{m}{2}$, then create $\frac{p^{\pi, \gamma}}{2} - j$ total $2$-bracelets from the remaining $\{\pi, \gamma\}$-paths.  Any remaining odd-length $\pi$-paths ($\gamma$-paths) must then be linked to each other to form (odd-length) $2$-chains in $\mathrm{B}(\Pi^*, \Gamma^*)$.   The number of such possibilities can be counted by the following statistic $B_2$:
+\begin{align}
+B_2 = \sum_{j=0}^{m/2}&{\binom{p^\pi_{\mathrm{odd}} - p^\pi_{\mathrm{even}}}{2j} \binom{p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}}}{2j} \binom{p^{\pi, \gamma}}{2j} \left[\left(2j\right)!\right]^2} \cdot \nonumber \\
+& \left( p^\pi_{\mathrm{odd}} - p^\pi_{\mathrm{even}} - 2j - 1 \right)!! \left( p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}} - 2j - 1\right)!! \left( p^{\pi, \gamma} - 2j - 1 \right)!!
+\end{align}
+Again, the two statistics can be carried out independently, yielding $A_2 \cdot B_2$ total optimal completions.
+
+In both of the first two cases, reversing the inequalities in the first two cases will lead to analogous arguments.  For the next two cases, suppose instead $p^{\pi, \gamma}$ is odd, and select a single $\{\pi, \gamma\}$-path $P$ that must belong to a $3$-chain.
+
+{\bf Case 3}: $p^{\pi, \gamma}$ is odd, $p^\pi_{\mathrm{odd}} < p^\pi_{\mathrm{even}}$, and $p^\gamma_{\mathrm{odd}} > p^\gamma_{\mathrm{even}}$.  Note that there are $A_3 = p^{\pi, \gamma}$ total ways to select our $\{\pi, \gamma\}$-path $P$.  Of the four possibilities for the parity of the paths to which $P$ may be linked, one may wish to verify that the only way we cannot attain the maximum in (\ref{Equation: DCJ-Indel Distance}) is if we link $P$ to an odd-length $\pi$-path and an even-length $\gamma$-path.  Thus, we arrive at three mutually exclusive subcases.
+
+In our first subcase, $P$ is linked to an even-length $\pi$-path and an odd-length $\gamma$-path:
+\begin{equation}
+B_3 = p^\pi_{\mathrm{even}} \cdot p^\gamma_{\mathrm{odd}}
+\end{equation}
+We now have an even number of $\{\pi, \gamma\}$-paths remaining and have reduced our problem to a simpler one that falls under Case 1 above, from which we may obtain some number $C_3$ of optimal completions.
+
+In the second subcase, we join $P$ to an odd-length $\pi$-path and an odd-length $\gamma$-path.  First, select two such paths:
+\begin{equation}
+D_3 = p^\pi_{\mathrm{odd}} \cdot p^\gamma_{\mathrm{odd}}
+\end{equation}
+Again we have reduced the problem to a subproblem falling under Case 1, from which we may obtain $E_3$ total optimal completions.
+In our third and final subcase, we join $P$ to an even $\pi$-path and an even $\gamma$-path:
+\begin{equation}
+F_3 = p^\pi_{\mathrm{even}} \cdot p^\gamma_{\mathrm{even}}
+\end{equation}
+Say that applying Case 1 to the resulting subcase in which $p^{\pi, \gamma}$ is even yields $G_3$ total optimal completions.   Then by independence, the total number of optimal completions over all three subcases will be given by $A_3 \cdot (B_3 \cdot C_3 + D_3 \cdot E_3 + F_3 \cdot G_3)$.
+
+{\bf Case 4}: $p^{\pi, \gamma}$ is odd, $p^\pi_{\mathrm{odd}} > p^\pi_{\mathrm{even}}$, and $p^\gamma_{\mathrm{odd}} > p^\gamma_{\mathrm{even}}$. Having selected $P$ from the $A_3 = p^{\pi, \gamma}$ total $\{\pi, \gamma\}$-paths, one may verify that the only way we can achieve the maximum in (\ref{Equation: DCJ-Indel Distance}) is by linking $P$ to an odd-length $\pi$-path and an odd-length $\gamma$-path, of which there are $B_4 = p^{\pi}_{\mathrm{odd}} \cdot p^{\gamma}_{\mathrm{odd}}$ total choices.  We have therefore reduced our problem of linking components of $\mathrm{B}(\Pi, \Gamma)$ to a smaller problem, falling under Case 2, for which $p^{\pi, \gamma}$ is even.  If there are $C_4$ total solutions to this smaller problem, then the number of optimal completions is given by $A_4 \cdot B_4 \cdot C_4$.
+
+As in the first two cases, reversing the inequalities defining Cases 3 and 4 will result in analogous arguments.
+
+\section*{Conclusions}
+
+In this paper, we have demonstrated how the problem of DCJ-indel sorting, first solved in\cite{braga2010}, can equally be handled via direct inspection of the breakpoint graph.  Unfortunately, we still do not see a natural correspondence between the two approaches to DCJ-indel sorting, which appear to be at odds because their definitions of indels are equivalent but fundamentally different.
+
+Furthermore, modeling an indel as a circular chromosome resulting from a DCJ has uncovered the solution space of DCJ-indel sorting, thus resolving an open problem.  We wonder if other operations could be adapted to a similar model to yield a straightforward calculation of other genomic distances involving indels.  We are also curious whether this model applies to the case of finding a minimum-cost transformation of one genome into another as we vary the parameter associated with the (constant) indel cost.
+
+
+\section*{Competing Interests}
+
+The author declares no competing interests.
+
+\section*{Authors' Contributions}
+
+PC has contributed all intellectual content for this paper.
+
+\section*{Acknowledgements}
+
+The author would like to acknowledge the support of Pavel Pevzner (UC San Diego Department of Computer Science), who offered guidance during the drafting of the manuscript.
+
+\section*{Endnotes}
+
+(a) This definition allows $\textrm{B}(\Pi, \Gamma)$ to contain cycles of length 2. (b) In particular, this requirement bars the trivial transformation of $\Pi$ into $\Gamma$ in which every chromosome from $\Pi$ is deleted, and then all the chromosomes of $\Gamma$ inserted. (c) Note that $v$ cannot be simultaneously $\pi$- and $\gamma$-open, although it may be a telomere of both $\Pi$ and $\Gamma$ or be $\pi$-open and a telomere of $\Gamma$ (in both cases, $v$ is an isolated vertex of $\textrm{B}(\Pi, \Gamma)$, i.e., a path of length $0$).
+
+
+\section*{Figures}
+  \subsection*{Figure 1 - Two Genomes and their Breakpoint Graph}
+     (a) Genomes $\Pi$ and $\Gamma$ on a collection of $12$ genes.  We use ``h" and ``t" to denote the head and tail of a gene.  $\Pi$ is drawn with blue adjacencies, and $\Gamma$ is drawn with red adjacencies.  (b) The breakpoint graph of $\Pi$ and $\Gamma$.  We have labeled the endpoint $v$ of a path with $\pi$ if $v$ is $\pi$-open, with $\gamma$ if $v$ is $\gamma$-open, and with $\emptyset$ if $v$ is a telomere of at least one genome.
+
+  \subsection*{Figure 2 - The Collection of All Possible DCJ Operations}
+  The DCJ incorporates many operations, depending on the structure of the chromosomes involved and whether the adjacencies used belong to the same chromosome.  (a)  Operation 1 in the definition of the DCJ incorporates linear internal translocations, reversals, circular fusions/fissions, the excision of a circular chromosome from a linear chromosome, and the integration of a circular chromosome into a linear chromosome.  (b) Operation 2 incorporates telomeric translocations, affix reversals (which involve the telomere of a linear chromosome), and the fission of a linear chromosome into a circular and linear chromosome (together with its inverse).  (c)  Operations 3 and 4 include linear fusions/fissions as well as the linearization/circularization of a single chromosome.
+  
+  \subsection*{Figure 3 - Encoding the Deletion of a Chromosomal Interval as a DCJ}
+   The deletion of a chromosomal interval connecting $w$ to $x$ can be encoded by a DCJ that turns the interval connecting $w$ to $x$ into a circular chromosome.  The four possible deletions of a chromosomal interval are shown in the above figure; this correspondence holds even when the interval in question is taken to be an entire linear chromosome.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{images/BMC2012/genomes_breakpoint_graph}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{images/BMC2012/DCJ}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{images/BMC2012/indel_as_DCJ}
+\end{figure}
+
+
+\section*{Additional Files}
+  \subsection*{Additional file 1 --- Genomes, Breakpoint Graph.pdf}
+    PDF file corresponding to Figure 1.
+
+  \subsection*{Additional file 2 --- DCJ.pdf}
+    PDF file corresponding to Figure 2.
+   
+   \subsection*{Additional file 3 --- Indel as DCJ.pdf}
+    PDF file corresponding to Figure 3.
+
+%Case 3
+%We then must create a maximal set of even-length $2$-chains by linking as many $\pi$-paths and $\gamma$-paths of opposite parity as possible.  First, choose these $\pi$-paths and $\gamma$-paths:
+%\begin{equation}
+%D_{3} = \mathrm{P}(p^\pi_{\mathrm{even}} - 1, p^\pi_{\mathrm{odd}}) \cdot \mathrm{P}(p^\gamma_{\mathrm{odd}} - 1, p^\gamma_{\mathrm{even}})
+%\end{equation}
+%
+%\begin{align}
+%C_{3} & = (p^\pi_{\mathrm{even}} - p^\pi_{\mathrm{odd}}) \cdot (p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}}) \cdot (p^\pi_{\mathrm{even}} - p^\pi_{\mathrm{odd}} - 2)!! \cdot (p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}} - 2)!! \nonumber \\
+%& = (p^\pi_{\mathrm{odd}} - p^\pi_{\mathrm{even}})!! \cdot (p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}})!!
+%\end{align}
+%Now link the remaining even $\pi$-paths together and the remaining odd $\gamma$-paths together:
+%
+%Next, match as many remaining $\pi$-paths of opposite parity and $\gamma$-paths of opposite parity as possible:
+%\begin{equation}
+%E_3 = P(p^\pi_{\mathrm{even}}, p^\pi_{\mathrm{odd}} - 1) \cdot P(p^\gamma_{\mathrm{odd}} - 1, p^\gamma_{\mathrm{even}})
+%\end{equation}
+%Then, match remaining $\pi$-paths with each other and $\gamma$-paths with each other:
+%\begin{equation}
+%F_3 = (p^\pi_{\mathrm{even}} - p^\pi_{\mathrm{odd}} )!! \cdot (p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}} - 2)!!
+%\end{equation}
+%Next, match as many remaining $\pi$-paths of opposite parity and $\gamma$-paths of opposite parity as possible:
+%\begin{equation}
+%H_3 = P(p^\pi_{\mathrm{even}} - 1, p^\pi_{\mathrm{odd}} ) \cdot P(p^\gamma_{\mathrm{odd}}, p^\gamma_{\mathrm{even}} - 1)
+%\end{equation}
+%Then, match remaining $\pi$-paths with each other and $\gamma$-paths with each other:
+%\begin{equation}
+%I_3 = (p^\pi_{\mathrm{even}} - p^\pi_{\mathrm{odd}} - 2)!! \cdot (p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}})!!
+%\end{equation}
+%Independence yields a total of $A_3 \cdot \left( B_3 \cdot C_3 + D_3 \cdot E_3 \cdot F_3 + G_3 \cdot H_3 \cdot I_3 \right)$ possibilities.
+% Case 4
+%We must link $\pi$-paths of opposite parity, then link $\gamma$-paths of opposite parity:
+%\begin{equation}
+%C_4 = \mathrm{P}\left(p^\pi_{\mathrm{odd}} - 1, p^\pi_{\mathrm{even}}\right) \cdot \mathrm{P}\left(p^\gamma_{\mathrm{odd}} - 1, p^\gamma_{\mathrm{even}}\right)
+%\end{equation}
+%Finally, link remaining paths and cycles analogously to Case 2, assuming without loss of generality that $p^\pi_{\mathrm{odd}} - p^\pi_{\mathrm{even}} \geq p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}}$:
+%\begin{align}
+%D_4 = \sum_{j=0}^{\min{\left\{{p^{\pi, \gamma}} - 1, p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}} - 1\right\}}}&{\binom{p^\pi_{\mathrm{odd}} - p^\pi_{\mathrm{even}} - 1}{2j} \binom{p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}}- 1}{2j} \binom{p^{\pi, \gamma} - 1}{2j} \left(2j\right)! \left(2j\right)!} \cdot \nonumber \\
+%& \left( p^\pi_{\mathrm{odd}} - p^\pi_{\mathrm{even}} - 2j - 2 \right)!! \left( p^\gamma_{\mathrm{odd}} - p^\gamma_{\mathrm{even}} - 2j - 2\right)!! \left( p^{\pi, \gamma} - 2j - 2 \right)!!
+%\end{align}
